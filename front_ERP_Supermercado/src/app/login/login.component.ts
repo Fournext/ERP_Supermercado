@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../../services/login.service';
+import { User } from '../../interface/user';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -13,15 +17,31 @@ export class LoginComponent {
   password: string = '';
   error: string = '';
   success: boolean = false;
+  constructor(
+    private _loginservices: LoginService,
+    private toastr: ToastrService,
+  ) { }
 
-  login() {
-    // Simulación: puedes cambiar esto por autenticación real
-    if (this.username === 'FRX' && this.password === '123456') {
-      this.success = true;
-      this.error = '';
-    } else {
-      this.success = false;
-      this.error = 'Correo o contraseña incorrectos.';
-    }
+
+  async login() {
+    
+   const user: User = {
+    username: this.username,
+    password: this.password
+   };
+
+   this._loginservices.login(user).subscribe({
+      next: async(token)=> {
+        localStorage.setItem('token', token);
+        this.toastr.success("Bienvenido")
+        this.success = true;
+      },
+      error: (e: HttpErrorResponse) => {
+        this.toastr.error(e.error?.message,"",{
+          positionClass: 'toast-bottom-right',  // Posicion
+          timeOut: 3000  // Tiempo de duración 
+        });
+      }
+   })
   }
 }
