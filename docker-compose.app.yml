@@ -1,0 +1,35 @@
+services:
+  spring-backend:
+    build: ./back_API_ERP_Supermercado/
+    container_name: spring_backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/DB_supermarket
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=071104
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SERVER_PORT=3005
+    ports:
+      - "3005:3005"
+    
+    depends_on:
+      - angular-app
+    networks:
+      - backend
+      - frontend
+
+  angular-app:
+    build: ./front_ERP_Supermercado/
+    container_name: angular_frontend
+    ports:
+      - "4000:4000"
+    environment:
+      - API_URL=http://web:3005
+    networks:
+      - frontend
+      - backend
+
+networks:
+  backend:
+    external: true
+  frontend:
+    driver: bridge
