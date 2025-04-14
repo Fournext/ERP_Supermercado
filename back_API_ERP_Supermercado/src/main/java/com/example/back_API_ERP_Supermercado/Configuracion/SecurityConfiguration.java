@@ -48,7 +48,8 @@ public class SecurityConfiguration {
                 "http://localhost:3000",  // Frontend React/Vue
                 "http://localhost:4200",
                 "http://localhost:4000",// Frontend Angular
-                "https://tudominio.com"
+                "https://tudominio.com",
+                "http://ec2-18-117-180-26.us-east-2.compute.amazonaws.com:4000"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
