@@ -28,9 +28,7 @@ public class Personal {
     @JoinColumn(name = "id_turno")
     private Turno id_turno;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = true)
-    private Usuario id_usuario;
-    
-    
+    // @ManyToOne
+    // @JoinColumn(name = "id_usuario", nullable = true)
+    // private Usuario id_usuario;
 }
