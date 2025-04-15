@@ -1,15 +1,18 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
+import { authGuard } from './business/Protection _outes/auth.guard';
 
 export const routes: Routes = [
     {
         path: '', redirectTo: 'login',pathMatch:'full'},
     {
-        path: 'login',component: LoginComponent},
+        path: 'login',
+        loadComponent: () => import('./business/login/login.component')
+    },
 
     //parte de del dashboard    
     {
         path: '',
+        canActivate: [authGuard],
         loadComponent: () => import('./shared/components/layout/layout.component'),
         children: [
             {

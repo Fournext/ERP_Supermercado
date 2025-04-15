@@ -16,7 +16,14 @@ export class LoginService {
     this.myApiUrl = 'auth';
    }
 
-   login(user: User):Observable<string> {
+  login(user: User):Observable<string> {
     return this.http.post<string>(`${this.myAppUrl}${this.myApiUrl}/login`,user);
+  }
+  register(user: User):Observable<string> {
+    return this.http.post<string>(`${this.myAppUrl}${this.myApiUrl}/register`,user);
+  }
+
+  getUser(username: string):Observable<User> {
+    return this.http.get<User>(`${this.myAppUrl}usuarios/getUser/${username}`);
   }
 }
