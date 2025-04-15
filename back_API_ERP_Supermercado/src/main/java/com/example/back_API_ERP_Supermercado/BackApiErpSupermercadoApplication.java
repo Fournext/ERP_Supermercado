@@ -8,6 +8,7 @@ public class BackApiErpSupermercadoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackApiErpSupermercadoApplication.class, args);
+		System.out.println("Corriendo.........");
 	}
 
 }
