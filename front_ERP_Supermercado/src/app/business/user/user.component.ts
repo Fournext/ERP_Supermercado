@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { personal } from '../../../interface/personal';
 import { Personal } from '../../../interface/Personal2';
-import { rol } from '../../../interface/roles';
-import { turno } from '../../../interface/turno';
 import { PersonalService } from '../../../services/personal.service';
-import { RolesService } from '../../../services/roles.service';
-import { TurnoService } from '../../../services/turno.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../interface/user';
-import { LoginService } from '../../../services/login.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user',
@@ -18,6 +12,13 @@ import { LoginService } from '../../../services/login.service';
   styleUrl: './user.component.css'
 })
 export default class UserComponent implements OnInit {
+
+  constructor(
+    private personalService: PersonalService,
+    private toastr: ToastrService,
+  ) { }
+
+
   mostrarFormulario = false;
 
   nuevoPersonal = {
@@ -28,7 +29,7 @@ export default class UserComponent implements OnInit {
     id_rol: undefined,
     id_turno: undefined,
   };
-  
+
 
   newUser = {
     username: '',
@@ -48,7 +49,9 @@ export default class UserComponent implements OnInit {
     { id_turno: 2, descripcion: 'Tarde' }
   ];
 
-  constructor() { }
+  //atributo que sera el motivo para eliminar el personal/usuario y la fecha la insertaremos directamente
+  idPersonal:number=1;
+  motivo: string = 'Se tiro en Si1';
 
   ngOnInit(): void {
     this.cargarPersonal();
@@ -67,20 +70,35 @@ export default class UserComponent implements OnInit {
     const fechaCreacion = this.nuevoPersonal.fecha_creacion instanceof Date
       ? this.nuevoPersonal.fecha_creacion
       : new Date(this.nuevoPersonal.fecha_creacion);
-  
+
     // Añadimos el nuevo personal a la lista (sin llamadas API)
     this.listaPersonal.push({
       ...this.nuevoPersonal,
       fecha_creacion: fechaCreacion.toLocaleDateString(),
     });
-  
+
     // Limpiamos los campos
     this.nuevoPersonal = { nombre: '', apellido: '', carnet: '', fecha_creacion: new Date(), id_rol: undefined, id_turno: undefined };
-  
+
     // Cerramos el formulario
     this.mostrarFormulario = false;
   }
-  
-  
-  
+
+  eliminarPersonal(persona: any): void {
+    const confirmacion = confirm(`¿Estás seguro de eliminar a ${persona.nombre}?`)
+    const hoy = new Date();
+    const fecha = hoy.toISOString().slice(0, 10); // yyyy-MM-dd
+    // const idPersonal: number = 1;
+    // const fecha = '2025-04-21';
+    // const motivo = 'Tuvo un hijo'
+    if (confirmacion) {
+      this.personalService.eliminarPersonalByEstado(this.idPersonal, fecha, this.motivo)
+        .subscribe(response => {
+          console.log('Se elimino el personal correctamente', response);
+        }, error => {
+          console.error('Error al eliminar personal:', error);
+        });
+
+    }
+  }
 }
