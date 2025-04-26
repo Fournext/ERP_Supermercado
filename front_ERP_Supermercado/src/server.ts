@@ -29,13 +29,20 @@ const angularApp = new AngularNodeAppEngine();
 /**
  * Serve static files from /browser
  */
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
+app.use(express.static(browserDistFolder, {
+  maxAge: '1y',
+  index: false,
+  redirect: false,
+  setHeaders: (res, path) => {
+    if (path.endsWith('.mjs')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+    // Opcional: para otros tipos de archivos
+    else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
 
 /**
  * Handle all other requests by rendering the Angular application.
