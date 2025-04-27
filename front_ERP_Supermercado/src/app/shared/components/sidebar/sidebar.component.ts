@@ -1,6 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+<<<<<<< HEAD
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuService } from '../../services/menu/menu.component';
+=======
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { MenuService } from '../../services/menu/menu.component';
+import { ToastrService } from 'ngx-toastr';
+import { BitacoraService } from '../../../../services/bitacora.service';
+>>>>>>> 543aef5887f40762a7a1894f86a27d7eeace4327
 
 @Component({
   selector: 'app-sidebar',
@@ -13,7 +20,16 @@ import { MenuService } from '../../services/menu/menu.component';
 export class SidebarComponent implements OnInit {
   menuVisible: boolean = false; // Estado inicial del menú
 
+<<<<<<< HEAD
   constructor(private menuService: MenuService) {}
+=======
+  constructor(
+    private menuService: MenuService,
+    private router: Router,
+    private toastr: ToastrService,
+    private _bitacoraservices: BitacoraService
+  ) {}
+>>>>>>> 543aef5887f40762a7a1894f86a27d7eeace4327
 
   ngOnInit(): void {
     // Escucha los cambios del estado del menú desde el servicio
@@ -42,4 +58,20 @@ export class SidebarComponent implements OnInit {
       this.menuService.toggleMenu(); // Ocultar el menú si está activo
     }
   }
+<<<<<<< HEAD
+=======
+
+  logout() {
+    this._bitacoraservices.ActualizarBitacora("Cerro Sesion");
+    localStorage.removeItem('token');
+    
+    this.toastr.success('Sesión cerrada correctamente', 'Logout');
+  
+    // Espera 1 segundo para que se vea el mensaje
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 2000); // 1000 ms = 1 segundo
+  }  
+
+>>>>>>> 543aef5887f40762a7a1894f86a27d7eeace4327
 }

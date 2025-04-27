@@ -1,0 +1,42 @@
+[33mcommit f505118e5bbe632e7f61acc209094c16db16bdd8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/ruddy[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 8e4f33e 2a70037
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sun Apr 6 18:47:29 2025 -0400
+
+    Merge branch 'ScMaster'
+
+[33mcommit 2a70037c3d04a2ba470e62a4ed0071b794fdfcf6[m
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sun Apr 6 18:38:36 2025 -0400
+
+    feat: Agregó login front
+
+[33mcommit 85e2d04051a464b911bc60f5c53aaf8f2b8cd891[m
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sun Apr 6 18:11:06 2025 -0400
+
+    feat: inicio de rama Scrum Master
+
+[33mcommit 8e4f33e62da9a9e7abddf5026cfb0be213471caf[m
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sat Apr 5 18:36:33 2025 -0400
+
+    docs: Agrego nuevos puntos en el README
+
+[33mcommit 61a1faa31e1d79f2f98d564eac4587ea0a2994f3[m
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sat Apr 5 18:30:06 2025 -0400
+
+    feat:Agrego Tailwind CSS y los archivos de configuracion
+
+[33mcommit 496d23a7ac71f74ccfb58abba1c2f51e7fbc14e4[m
+Author: Fournext <127251430+Fournext@users.noreply.github.com>
+Date:   Sat Apr 5 01:31:36 2025 -0400
+
+    Create README.md
+
+[33mcommit 391374f03cbf8ab0e32df368317d9178f33a9600[m
+Author: Fournext <sebastianzc04@gmail.com>
+Date:   Sat Apr 5 01:04:15 2025 -0400
+
+    chore: inicia proyecto con configuración base
