@@ -45,6 +45,10 @@ export const routes: Routes = [
         loadComponent:()=>import('./business/categoria/categoria.component')
       },
       {
+        path:'bitacora',
+        loadComponent:()=>import('./business/bitacora/bitacora.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
