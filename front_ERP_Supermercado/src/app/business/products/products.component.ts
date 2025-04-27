@@ -223,5 +223,4 @@ export default class ProductsComponent {
     this.marcaService.obtenerMarcas();
     this.categoriaService.obtenerCategorias();
   }
-
 }

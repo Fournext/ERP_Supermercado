@@ -3,10 +3,12 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Categoria } from '../../../interface/categoria.interface';
 import { CategoriaService } from '../../../services/categoria.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-categoria',
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './categoria.component.html',
   styleUrl: './categoria.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,8 +26,7 @@ export default class CategoriaComponent {
 
   //datos del estado global
   public listaCategorias = computed(() => this.categoriaService.listaCategorias());
-
-
+  
   public registrarCategoria() {
     const nombre: string = this.nombre();
     this.categoriaService.registrarCategoria(nombre).subscribe({
@@ -90,4 +91,14 @@ export default class CategoriaComponent {
   ngOnInit(): void {
     this.categoriaService.obtenerCategorias();
   }
+
+  // Agregamos la variable de búsqueda
+  public filtroBusqueda = signal<string>(''); 
+
+  // Filtrar categorías en tiempo real
+  public categoriasFiltradas = computed(() => {
+    return this.listaCategorias().filter((categoria) =>
+      categoria.nombre.toLowerCase().includes(this.filtroBusqueda().toLowerCase())
+    );
+  });
 }

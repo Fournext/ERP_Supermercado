@@ -4,10 +4,11 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Marca } from '../../../interface/marca.interface';
 import { MarcaService } from '../../../services/marca.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-marcas',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './marcas.component.html',
   styleUrl: './marcas.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,12 +19,21 @@ export default class MarcasComponent {
 
   //atributos para los formularios
   public nombre = signal<string>('');
-
   public nuevoNombre = signal<string>('');
-  public antiguoNombre=signal<string>('');
+  public antiguoNombre = signal<string>('');
 
   //datos del estado global
   public listaMarcas = computed(() => this.marcaService.listaMarcas());
+
+  // Agregamos la variable de búsqueda
+  public filtroBusqueda = signal<string>('');
+
+  // Filtrar marcas en tiempo real
+  public marcasFiltradas = computed(() => {
+    return this.listaMarcas().filter((marca) =>
+      marca.nombre.toLowerCase().includes(this.filtroBusqueda().toLowerCase())
+    );
+  });
 
 
   public registrarMarca() {
@@ -48,7 +58,7 @@ export default class MarcasComponent {
     this.nombre.set('');
   }
   //buscar el id del nombre
-  private buscarId(nombre:string) {
+  private buscarId(nombre: string) {
     const marca = this.listaMarcas().find((marca: Marca) => marca.nombre == nombre);
     if (marca) {
       return marca.id_marca;
@@ -58,7 +68,7 @@ export default class MarcasComponent {
   }
 
   public actualizarMarca() {
-    const antiguoNombre=this.antiguoNombre();
+    const antiguoNombre = this.antiguoNombre();
     const id = this.buscarId(antiguoNombre);
     if (id == 0) {
       alert('marca no encontrada');
