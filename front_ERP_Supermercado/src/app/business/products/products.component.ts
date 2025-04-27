@@ -6,10 +6,12 @@ import { ImagenService } from '../../../services/imagen.service';
 import { MarcaService } from '../../../services/marca.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { ProductoConPrecio } from '../../../interface/producto.interface';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -27,6 +29,28 @@ export default class ProductsComponent {
 
   public switchFormularioCrear = signal<boolean>(false);
   public switchFormularioActualizar = signal<boolean>(false);
+
+  public filtroNombre = signal<string>('');
+  public filtroCategoria = signal<string>('');
+  public filtroCodigo = signal<string>('');
+
+  // Filtrar productos dinámicamente según los valores ingresados
+  public productosFiltrados = computed(() => {
+    return this.listaProductos().filter(producto =>
+      producto.codigo.toLowerCase().includes(this.filtroCodigo().toLowerCase()) &&
+      producto.descripcion.toLowerCase().includes(this.filtroNombre().toLowerCase()) &&
+      producto.categoria.toLowerCase().includes(this.filtroCategoria().toLowerCase())
+    ).map(producto => ({
+      ...producto,
+      imagenUrl: this.buscarUrl(producto.idProducto) || 'assets/default-image.jpg'
+    }));
+  });
+
+public trackProductos(index: number, producto: any): number {
+    return producto.idProducto;
+  }
+
+
   // En el componente TypeScript
   public listaProductosConImagen = computed(() => {
     return this.productoService.listaProductos().map(producto => {
@@ -65,10 +89,10 @@ export default class ProductsComponent {
     this.descripcionA.set(producto.descripcion);
     this.marcaA.set(producto.marca);
     this.categoriaA.set(producto.categoria);
-    if(producto.tipo_producto=='Perecedero'){
+    if (producto.tipo_producto == 'Perecedero') {
       this.tipoProductoA.set('1');
     }
-    if(producto.tipo_producto=='No perecedero'){
+    if (producto.tipo_producto == 'No perecedero') {
       this.tipoProductoA.set('2');
     }
     this.precioA.set(producto.precio.toString());
@@ -83,14 +107,10 @@ export default class ProductsComponent {
   }
 
   private buscarUrl(idProducto: number): string {
-    const imagen = this.listaImagenes().find((imagenActual) => imagenActual.idProducto == idProducto);
-    if (imagen) {
-      return imagen.url;
-    } else {
-      console.log('no se encontro el id del producto');
-      return '';
-    }
+    const imagen = this.listaImagenes().find(imagenActual => imagenActual.idProducto === idProducto);
+    return imagen ? imagen.url : 'assets/default-image.jpg';
   }
+
 
   private buscarIdMarca(nombre: string) {
     const marca = this.listaMarcas().find((marca) => marca.nombre == nombre);
@@ -223,5 +243,4 @@ export default class ProductsComponent {
     this.marcaService.obtenerMarcas();
     this.categoriaService.obtenerCategorias();
   }
-
 }
