@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.back_API_ERP_Supermercado.Entidad.Personal;
 import com.example.back_API_ERP_Supermercado.Repositorio.PersonalRepositorio;
+import com.example.back_API_ERP_Supermercado.Servicios.DTO.PersonalDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -40,5 +41,10 @@ public class PersonalServicio {
         if (personalRepositorio.existsById(id)) {
             personalRepositorio.deleteById(id);
         }
+    }
+
+    @Transactional
+    public void eliminarPersonalByEstado(PersonalDTO personalDTO) {
+        personalRepositorio.eliminarPersonalByEstado(personalDTO.getIdPersonal(), personalDTO.getFecha(), personalDTO.getMotivo());
     }
 }

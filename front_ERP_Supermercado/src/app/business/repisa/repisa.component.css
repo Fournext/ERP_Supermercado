@@ -1,0 +1,10 @@
+/* No necesitas Tailwind extra, pero puedes agregar detalles pequeños */
+body {
+    background-color: #f9fafb;
+  }
+  
+  input:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* azul clarito de foco */
+  }
+  

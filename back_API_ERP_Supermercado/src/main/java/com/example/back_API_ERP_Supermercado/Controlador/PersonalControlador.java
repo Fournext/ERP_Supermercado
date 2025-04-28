@@ -1,6 +1,7 @@
 package com.example.back_API_ERP_Supermercado.Controlador;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.back_API_ERP_Supermercado.Entidad.Personal;
 import com.example.back_API_ERP_Supermercado.Servicios.PersonalServicio;
+import com.example.back_API_ERP_Supermercado.Servicios.DTO.PersonalDTO;
 
 @RestController
 @RequestMapping("/api/personal")
@@ -41,6 +43,12 @@ public class PersonalControlador {
     @DeleteMapping("/eliminar/{id}")
     public void eliminarPersonal(@PathVariable Integer id) {
         personalService.eliminarPersonal(id);
+    }
+
+    @PostMapping("/eliminarPersonalByEstado")
+    public ResponseEntity<Map<String, String>> eliminarPersonalByEstado(@RequestBody PersonalDTO personalDTO) {
+        personalService.eliminarPersonalByEstado(personalDTO);
+        return ResponseEntity.ok(Map.of("mensaje", "Permiso asignado correctamente"));
     }
 
 }
