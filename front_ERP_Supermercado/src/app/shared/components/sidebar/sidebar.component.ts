@@ -3,17 +3,20 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuService } from '../../services/menu/menu.component';
 import { ToastrService } from 'ngx-toastr';
 import { BitacoraService } from '../../../../services/bitacora.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive,CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 
 export class SidebarComponent implements OnInit {
   menuVisible: boolean = false; // Estado inicial del menú
+  mostrarSector: boolean = false;
+  
 
   constructor(
     private menuService: MenuService,
@@ -49,6 +52,15 @@ export class SidebarComponent implements OnInit {
       this.menuService.toggleMenu(); // Ocultar el menú si está activo
     }
   }
+
+  toggleSubMenuRepisa() {
+    this.mostrarSector = !this.mostrarSector;
+  }
+
+  ocultarSector() {
+    this.mostrarSector = false;
+  }
+  
 
   logout() {
     this._bitacoraservices.ActualizarBitacora("Cerro Sesion");
