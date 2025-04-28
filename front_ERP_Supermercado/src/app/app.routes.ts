@@ -62,6 +62,18 @@ export const routes: Routes = [
         loadComponent:()=>import('./business/turno/turno.component')
       },
       {
+        path:'almacen',
+        loadComponent:()=>import('./business/almacen/almacen.component')
+      },
+      {
+        path:'sector',
+        loadComponent:()=>import('./business/sector/sector.component')
+      },
+      {
+        path:'repisa',
+        loadComponent:()=>import('./business/repisa/repisa.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

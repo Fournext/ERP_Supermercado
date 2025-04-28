@@ -14,8 +14,15 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     importProvidersFrom(
       HttpClientModule, 
-      BrowserAnimationsModule,         // 👈 Necesario para Toastr
-      ToastrModule.forRoot()           // 👈 Registra el Toastr globalmente
+      BrowserAnimationsModule,         
+      ToastrModule.forRoot({
+        positionClass: 'toast-bottom-right',  // 👈 Establece abajo a la derecha
+        timeOut: 3000,                        // 👈 3 segundos
+        closeButton: true,                    // 👈 Botón de cerrar (x)
+        progressBar: true,                    // 👈 Barra de progreso
+        newestOnTop: true,                    // 👈 Nuevos arriba de viejos
+        preventDuplicates: true               // 👈 Evita mensajes duplicados
+      })
     )
   ]
 };
