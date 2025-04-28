@@ -1,0 +1,89 @@
+<div class="p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Gestión de Sectores</h1>
+  
+    <div class="flex justify-between mb-6">
+      <input
+        type="text"
+        [(ngModel)]="filtroNombre"
+        class="border rounded px-4 py-2 w-1/2"
+        placeholder="Buscar por nombre"
+      >
+      <button (click)="abrirModal(false)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        Añadir Sector
+      </button>
+    </div>
+  
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 rounded text-center">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-2 px-4 border-b text-center">ID</th>
+            <th class="py-2 px-4 border-b text-center">Nombre</th>
+            <th class="py-2 px-4 border-b text-center">Ubicacion</th>
+            <th class="py-2 px-4 border-b text-center">Acciones</th> <!-- ← ← ← Aquí estaba faltando -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sector of SectorListFiltered()" class="hover:bg-gray-50">
+            <td class="py-2 px-4 border-b">{{ sector.id_sector }}</td>
+            <td class="py-2 px-4 border-b">{{ sector.nombre }}</td>
+            <td class="py-2 px-4 border-b">{{ sector.ubicacion }}</td>
+            <td class="py-2 px-4 border-b">
+              <!-- Aquí los botones -->
+              <button (click)="abrirModal(true, sector)" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded mr-2">
+                Editar
+              </button>
+              <button (click)="eliminarAlmacen(sector.id_sector!)" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Modal -->
+    <div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-8 rounded-lg w-full max-w-md shadow-lg relative">
+        <h2 class="text-xl font-bold mb-6 text-gray-800">
+          {{ editando ? 'Editar Sector' : 'Añadir nuevo sector' }}
+        </h2>
+  
+        <div class="space-y-4">
+          <div>
+            <label class="block mb-1 font-semibold">Nombre:</label>
+            <input
+              type="text"
+              [(ngModel)]="nuevoSector.nombre"
+              class="border rounded px-4 py-2 w-full"
+              placeholder="Ej: Cereales"
+            >
+          </div>
+  
+          <div>
+            <label class="block mb-1 font-semibold">Ubicacion:</label>
+            <input
+              type="text"
+              [(ngModel)]="nuevoSector.ubicacion"
+              class="border rounded px-4 py-2 w-full"
+              placeholder="Ej: Pasillo 1"
+            >
+          </div>
+        </div>
+  
+        <div class="flex justify-end mt-6 space-x-4">
+          <button (click)="cerrarModal()" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded">
+            Cancelar
+          </button>
+          <button (click)="guardarSector()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+            {{ editando ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+  
+        <button (click)="cerrarModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+  

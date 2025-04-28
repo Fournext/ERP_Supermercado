@@ -6,6 +6,7 @@ import { User } from '../../../interface/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,7 @@ export default class LoginComponent {
     private _loginservices: LoginService,
     private toastr: ToastrService,
     private router: Router,
+    private _bitacoraservices: BitacoraService
   ) { }
 
 
@@ -33,13 +35,13 @@ export default class LoginComponent {
     };
  
     this._loginservices.login(user).subscribe({
-     next: (response: any) => {  // Usamos 'any' para flexibilidad
-       // Extrae el token del objeto de respuesta
-       const token = response.token;  // Acceso directo a la propiedad
+     next: (response: any) => {  
+       const token = response.token;  
        if (token) {
-         localStorage.setItem('token', token);  // Guarda solo el string
+         localStorage.setItem('token', token);  
+         this._bitacoraservices.ActualizarBitacora("Inicio de Sesion");
          this.toastr.success("¡Bienvenido!", "Éxito");
-         this.router.navigate(['/dashboard']);  // Redirige al dashboard
+         this.router.navigate(['/dashboard']);  
        } else {
          this.toastr.error("No se recibió el token", "Error");
        }

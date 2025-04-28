@@ -31,7 +31,12 @@ public class AuthenticationController {
         try {
             return ResponseEntity.ok(authenticationService.authenticate(user));
         } catch (BadCredentialsException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos");
-    }
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Usuario o contraseña incorrectos",
+                    (Throwable) e
+            );
+
         }
+    }
 }
