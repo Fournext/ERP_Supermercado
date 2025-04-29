@@ -8,7 +8,6 @@ import { environment } from "../environments/environment.development";
     providedIn: 'root'
 })
 export class PersonalService {
-    // private apiUrl = 'http://localhost:8080/api/personal'; // Reemplaza con tu URL real
     private myAppUrl: String;
     private myApiUrl: String;
     constructor(private http: HttpClient) {

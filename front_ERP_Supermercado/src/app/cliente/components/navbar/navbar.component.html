@@ -1,0 +1,47 @@
+<nav class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center space-x-4">
+      <img src="assets/logo.png" alt="Logo" class="h-10 w-auto">
+      <span class="font-bold text-xl text-gray-700">Supermercado</span>
+    </div>
+  
+    <!-- Buscador -->
+    <div class="flex-1 mx-8">
+      <input
+        type="text"
+        placeholder="Buscar productos..."
+        class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-400"
+      >
+    </div>
+  
+    <!-- Menú de Navegación -->
+    <div class="flex items-center space-x-6">
+      <a routerLink="/productos" class="text-gray-700 hover:text-green-600">Productos</a>
+  
+      <!-- Categoría desplegable -->
+      <div class="relative">
+        <button class="text-gray-700 hover:text-green-600">Categoría ▼</button>
+        <!-- <div class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+          <a routerLink="/categoria/tecnologia" class="block px-4 py-2 hover:bg-gray-100">Tecnología</a>
+          <a routerLink="/categoria/ropa" class="block px-4 py-2 hover:bg-gray-100">Ropa</a>
+          <a routerLink="/categoria/hogar" class="block px-4 py-2 hover:bg-gray-100">Hogar</a>
+        </div> -->
+      </div>
+  
+      <!-- Marca desplegable -->
+      <div class="relative" >
+        <button class="text-gray-700 hover:text-green-600">Marca ▼</button>
+        <!-- <div class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+          <a routerLink="/marca/nike" class="block px-4 py-2 hover:bg-gray-100">Nike</a>
+          <a routerLink="/marca/adidas" class="block px-4 py-2 hover:bg-gray-100">Adidas</a>
+          <a routerLink="/marca/samsung" class="block px-4 py-2 hover:bg-gray-100">Samsung</a>
+        </div> -->
+      </div>
+
+      <a routerLink="/carrito" class="text-gray-700 hover:text-green-600">Carrito</a>
+      
+      <a routerLink="/login" class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition">
+        Iniciar Sesión
+      </a>
+    </div>
+  </nav>

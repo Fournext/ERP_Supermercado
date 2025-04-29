@@ -30,4 +30,8 @@ export class TurnoService {
     eliminarTurno(id: number): Observable<turno> {
         return this.http.delete<turno>(`${this.myAppUrl}${this.myApiUrl}/eliminar/${id}`);
     }
+
+    obtenerTurno(id: number): Observable<turno> {
+        return this.http.get<turno>(`${this.myAppUrl}${this.myApiUrl}/${id}`);
+    }
 }

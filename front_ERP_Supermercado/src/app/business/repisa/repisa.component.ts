@@ -117,7 +117,7 @@ export default class RepisaComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    }).then((result:any) => {
       if (result.isConfirmed) {
         this.repisaServices.deleteRepisa(id).subscribe({
           next: (response: any) => {

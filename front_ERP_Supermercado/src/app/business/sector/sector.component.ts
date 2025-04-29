@@ -104,7 +104,7 @@ export default class SectorComponent implements OnInit{
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    }).then((result:any) => {
       if (result.isConfirmed) {
         this.sectorServices.deleteSector(id).subscribe({
           next:(response:any) => {

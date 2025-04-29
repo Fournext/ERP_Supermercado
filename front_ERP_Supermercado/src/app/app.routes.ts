@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './business/Protection _outes/auth.guard';
+import { InicioComponent } from './cliente/inicio/inicio.component';
 
 export const routes: Routes = [
   {
@@ -8,6 +9,10 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./business/login/login.component')
+  },
+  {
+    path: 'ecommerce',
+    component: InicioComponent
   },
 
   //parte de del dashboard
@@ -47,6 +52,14 @@ export const routes: Routes = [
       {
         path:'bitacora',
         loadComponent:()=>import('./business/bitacora/bitacora.component')
+      },
+      {
+        path:'roles',
+        loadComponent:()=>import('./business/rol-y-permisos/rol-y-permisos.component')
+      },
+      {
+        path:'turno',
+        loadComponent:()=>import('./business/turno/turno.component')
       },
       {
         path:'almacen',

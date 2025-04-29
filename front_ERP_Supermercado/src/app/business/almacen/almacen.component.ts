@@ -105,7 +105,7 @@ export default class AlmacenComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    }).then((result:any) => {
       if (result.isConfirmed) {
         this.almaceneServices.deleteAlmacen(id).subscribe({
           next:(response:any) => {

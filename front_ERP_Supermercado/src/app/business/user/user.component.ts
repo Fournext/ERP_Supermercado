@@ -1,104 +1,130 @@
 import { Component, OnInit } from '@angular/core';
-import { Personal } from '../../../interface/Personal2';
 import { PersonalService } from '../../../services/personal.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { personal } from '../../../interface/personal';
+import { rol } from '../../../interface/roles';
+import { turno } from '../../../interface/turno';
+import { RolesService } from '../../../services/roles.service';
+import { TurnoService } from '../../../services/turno.service';
+import { User } from '../../../interface/user';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export default class UserComponent implements OnInit {
 
-  constructor(
-    private personalService: PersonalService,
-    private toastr: ToastrService,
-  ) { }
+  personal: personal[] = [];
+  roles : rol[] = [];
+  turnos : turno[] = [];
+  users: User[] = [];
+  personalModal : personal = {} as personal;
 
-
-  mostrarFormulario = false;
-
-  nuevoPersonal = {
-    nombre: '',
-    apellido: '',
-    carnet: '',
-    fecha_creacion: new Date(),
-    id_rol: undefined,
-    id_turno: undefined,
-  };
-
-
-  newUser = {
-    username: '',
-    password: '',
-    email: '',
-  };
-
-  listaPersonal: Personal[] = []; // Usamos el tipo 'Personal' aquí
-
-  listaRoles = [
-    { id_rol: 1, nombre: 'Administrador' },
-    { id_rol: 2, nombre: 'Empleado' }
-  ];
-
-  listarTurnos = [
-    { id_turno: 1, descripcion: 'Mañana' },
-    { id_turno: 2, descripcion: 'Tarde' }
-  ];
-
-  //atributo que sera el motivo para eliminar el personal/usuario y la fecha la insertaremos directamente
-  idPersonal:number=1;
-  motivo: string = 'Se tiro en Si1';
+  constructor(private personalService: PersonalService,
+    private rolServicio: RolesService,
+    private turnoService: TurnoService,
+    private userService: UserService ) { }
 
   ngOnInit(): void {
-    this.cargarPersonal();
+    this.mostrarPersonal();
+    this.cargarRoles();
+    this.cargarTurnos();
+    this.cargarUsers();
   }
 
-  cargarPersonal(): void {
-    // Simulamos la carga de datos en la tabla
-    this.listaPersonal = [
-      { nombre: 'Juan', apellido: 'Pérez', carnet: '12345', fecha_creacion: '2021-05-01', id_rol: 1, id_turno: 1 },
-      { nombre: 'Ana', apellido: 'García', carnet: '67890', fecha_creacion: '2022-01-15', id_rol: 2, id_turno: 2 }
-    ];
+
+  obtenerRol(id_rol: number) {
+    let nombreRol: string = '';
+    this.roles.forEach((rol) => {
+      if (rol.id_rol == id_rol) {
+        nombreRol = rol.nombre;
+      }
+    })
+    return nombreRol;
   }
 
-  crearPersonal(): void {
-    // Asegúrate de que fecha_creacion sea un objeto Date
-    const fechaCreacion = this.nuevoPersonal.fecha_creacion instanceof Date
-      ? this.nuevoPersonal.fecha_creacion
-      : new Date(this.nuevoPersonal.fecha_creacion);
-
-    // Añadimos el nuevo personal a la lista (sin llamadas API)
-    this.listaPersonal.push({
-      ...this.nuevoPersonal,
-      fecha_creacion: fechaCreacion.toLocaleDateString(),
-    });
-
-    // Limpiamos los campos
-    this.nuevoPersonal = { nombre: '', apellido: '', carnet: '', fecha_creacion: new Date(), id_rol: undefined, id_turno: undefined };
-
-    // Cerramos el formulario
-    this.mostrarFormulario = false;
+  obtenerTurno(id_turno: number) {
+    let nombreTurno : string = '';
+    this.turnos.forEach((turno) => {
+      if (turno.id_turno == id_turno) {
+        nombreTurno = turno.descripcion;
+      }
+    })
+    return nombreTurno;
   }
 
-  eliminarPersonal(persona: any): void {
-    const confirmacion = confirm(`¿Estás seguro de eliminar a ${persona.nombre}?`)
-    const hoy = new Date();
-    const fecha = hoy.toISOString().slice(0, 10); // yyyy-MM-dd
-    // const idPersonal: number = 1;
-    // const fecha = '2025-04-21';
-    // const motivo = 'Tuvo un hijo'
-    if (confirmacion) {
-      this.personalService.eliminarPersonalByEstado(this.idPersonal, fecha, this.motivo)
-        .subscribe(response => {
-          console.log('Se elimino el personal correctamente', response);
-        }, error => {
-          console.error('Error al eliminar personal:', error);
-        });
+  cargarRoles() {
+    this.rolServicio.listarRoles().subscribe((rol) => {
+      this.roles = rol;
+    })
+  }
 
+  cargarTurnos() {
+    this.turnoService.listaTunos().subscribe((turno) => {
+      this.turnos = turno;
+    })
+  }
+
+  cargarUsers() {
+    this.userService.listarUsuarios().subscribe((user) => {
+      this.users = user;
+    })  
+  }
+  mostrarPersonal() {
+    this.personalService.listarPersonal().subscribe((personal) => {
+      this.personal = personal;
+      console.log(personal); 
+    })
+  }
+
+  eliminarPersonal(id: number) {
+    this.personalService.eliminarPersonal(id).subscribe(() => {
+      this.mostrarPersonal();
+    })
+  }
+
+  update : boolean = false;
+  crearPersonal() {
+    if(this.update){
+      this.actualizarPersonal(this.personalModal.id_personal!);
+      this.update = false;
+    }else{
+      this.personalService.crearPersonal(this.personalModal).subscribe(() => {
+        this.mostrarPersonal();
+        this.cerrarModal();
+      })
     }
   }
+  actualizarPersonal(id: number) {
+    this.personalService.actualizarPersonal(id, this.personalModal).subscribe(() => {
+      this.mostrarPersonal();
+      this.cerrarModal();
+    })
+  }
+
+  editarPersonal(personal: personal) {
+    this.personalModal = personal;
+    this.abrirModal();
+    this.update = true;
+  }
+
+  // --------------------Modal-------------------------------
+  mostrarModal = false;
+
+  abrirModal() {
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.personalModal = {} as personal;
+    this.update = false;
+  }
+  // ---------------------------------------------------------
+
 }
