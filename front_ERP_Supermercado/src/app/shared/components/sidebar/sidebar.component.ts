@@ -4,6 +4,7 @@ import { MenuService } from '../../services/menu/menu.component';
 import { ToastrService } from 'ngx-toastr';
 import { BitacoraService } from '../../../../services/bitacora.service';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,14 +17,41 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent implements OnInit {
   menuVisible: boolean = false; // Estado inicial del menú
   mostrarSector: boolean = false;
-  
+  showSubMenu = false;
+  showUserSubMenu = false;
+  showRepisaSubMenu = false;
+
 
   constructor(
     private menuService: MenuService,
     private router: Router,
     private toastr: ToastrService,
-    private _bitacoraservices: BitacoraService
+    private _bitacoraservices: BitacoraService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
+
+  closeAllSubMenus() {
+    this.showSubMenu = false;
+    this.showUserSubMenu = false;
+    this.showRepisaSubMenu = false;
+  }
+
+
+  toggleSubMenu() {
+    this.closeAllSubMenus(); // Cierra todos los submenús antes de abrir este
+    this.showSubMenu = !this.showSubMenu;
+  }
+
+  toggleUserSubMenu() {
+    this.closeAllSubMenus(); // Cierra todos los submenús antes de abrir este
+    this.showUserSubMenu = !this.showUserSubMenu;
+  }
+
+  toggleRepisaSubMenu() {
+    this.closeAllSubMenus(); // Cierra todos los submenús antes de abrir este
+    this.showRepisaSubMenu = !this.showRepisaSubMenu;
+  }
+
 
   ngOnInit(): void {
     // Escucha los cambios del estado del menú desde el servicio
@@ -72,6 +100,5 @@ export class SidebarComponent implements OnInit {
     setTimeout(() => {
       window.location.href = '/login';
     }, 2000); // 1000 ms = 1 segundo
-  }  
-
+  } 
 }
