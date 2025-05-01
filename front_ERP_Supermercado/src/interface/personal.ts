@@ -4,8 +4,7 @@ export interface personal {
     apellido: string;
     carnet: string;
     fecha_creacion: Date;
-    id_rol?: number;
-    id_turno?: number;
-    id_usuario?: { id_usuario: number };
-
+    idRol: number;
+    idTurno: number;
+    idUsuario: number;
 }

@@ -34,4 +34,9 @@ public class TurnoControlador {
         turnoService.eliminarTurno(id);
     }
 
+    @GetMapping("/{id}")
+    public Turno buscarTurno(@PathVariable Integer id) {
+        return turnoService.findById(id);
+    }
+
 }
