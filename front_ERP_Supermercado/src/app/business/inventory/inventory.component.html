@@ -1,1 +1,146 @@
-<p>inventory works!</p>
+<div class="container mx-auto p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-2xl font-bold text-gray-700 mb-4">Gestión de Lotes de Inventario</h1>
+
+    <!-- Botón para mostrar el formulario -->
+    <button class="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition" (click)="toggleForm()">
+        {{ showForm ? 'Cerrar Formulario' : 'Agregar Lote' }}
+    </button>
+
+    <!-- Formulario para agregar/editar lotes -->
+    <div *ngIf="showForm" class="bg-white p-6 shadow-md rounded-lg mb-6">
+        <h2 class="text-xl font-bold text-gray-700 mb-4">Gestión de Lote</h2>
+        <form>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 font-medium">Producto:</label>
+                    <select [(ngModel)]="newLote.descripcion_producto" name="producto"
+                    class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
+                    <option value="" disabled selected>Selecciona un producto</option>
+                    <option *ngFor="let product of listaProductos()" [value]="product.descripcion">
+                        {{ product.descripcion }}
+                    </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Stock:</label>
+                    <input type="number" [(ngModel)]="newLote.stock" name="stock"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300"
+                        placeholder="Ingresa el stock" />
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Stock Mínimo:</label>
+                    <input type="number" [(ngModel)]="newLote.stock_minimo" name="stockMinimo"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300"
+                        placeholder="Stock mínimo de seguridad" />
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Fecha de Caducidad:</label>
+                    <input type="date" [(ngModel)]="newLote.fecha_caducidad" name="fechaCaducidad"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300" />
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Costo Unitario:</label>
+                    <input type="number" [(ngModel)]="newLote.costo_unitario" name="costoUnitario"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300"
+                        placeholder="Costo unitario" />
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Cod. Repisa:</label>
+                    <select [(ngModel)]="newLote.cod_repisa" name="codRepisa"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
+                        <option value="" disabled selected>Selecciona una repisa</option>
+                        <option *ngFor="let repisa of Repisas" [value]="repisa.codigo">{{ repisa.codigo }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Cod. Almacén:</label>
+                    <select [(ngModel)]="newLote.cod_almacen" name="codAlmacen"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
+                        <option value="" disabled selected>Selecciona un almacén</option>
+                        <option *ngFor="let almacen of Almacenes" [value]="almacen.codigo">{{ almacen.codigo }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-medium">Estado:</label>
+                    <select [(ngModel)]="newLote.nombre_estado" name="estado"
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
+                        <option value="activo">Activo</option>
+                        <option value="caducado">Caducado</option>
+                        <option value="agotado">Agotado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mt-4">
+                <button type="submit" (click)="saveLote()"
+                    class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition">
+                    Guardar
+                </button>
+                <button type="button" (click)="toggleForm()"
+                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de Lotes -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="w-full text-left border-collapse text-sm">
+            <thead>
+                <tr class="bg-gray-700 text-white uppercase text-sm">
+                    <th class="py-3 px-4 border-b text-center">ID</th>
+                    <th class="py-3 px-4 border-b text-left">Producto</th>
+                    <th class="py-3 px-4 border-b text-center">Stock</th>
+                    <th class="py-3 px-4 border-b text-center">Stock Mínimo</th>
+                    <th class="py-3 px-4 border-b text-center">Fecha Caducidad</th>
+                    <th class="py-3 px-4 border-b text-center">Costo Unitario</th>
+                    <th class="py-3 px-4 border-b text-center">Cod. Repisa</th>
+                    <th class="py-3 px-4 border-b text-center">Cod. Almacén</th>
+                    <th class="py-3 px-4 border-b text-center">Estado</th>
+                    <th class="py-3 px-4 border-b text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lote of lotes" class="hover:bg-gray-100 transition">
+                    <td class="py-3 px-4 border-b text-center font-semibold">{{ lote.id_lote}}</td>
+                    <td class="py-3 px-4 border-b text-left">{{ lote.descripcion_producto }}</td>
+                    <td class="py-3 px-4 border-b text-center font-bold">{{ lote.stock }}</td>
+                    <td class="py-3 px-4 border-b text-center">
+                        <span class="font-bold text-red-500">{{ lote.stock_minimo }}</span>
+                    </td>
+                    <td class="py-3 px-4 border-b text-center">{{ lote.fecha_caducidad }}</td>
+                    <td class="py-3 px-4 border-b text-center">{{ lote.costo_unitario | currency:'Bs. ':'symbol' }}</td>
+                    <td class="py-3 px-4 border-b text-center">{{ lote.cod_repisa}}</td>
+                    <td class="py-3 px-4 border-b text-center">{{ lote.cod_almacen}}</td>
+                    <td class="py-3 px-4 border-b text-center">
+                        <span class="font-bold" [ngClass]="{
+                    'text-green-600': lote.nombre_estado === 'activo',
+                    'text-red-600': lote.nombre_estado === 'caducado',
+                    'text-yellow-600': lote.nombre_estado === 'agotado'
+                }">{{ lote.nombre_estado }}</span>
+                    </td>
+                    <td class="py-3 px-4 border-b text-center">
+                        <button
+                            class="bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-green-600 transition inline-block"
+                            (click)="editLote(lote.id_lote!)">
+                            Editar
+                        </button>
+                        <button
+                            class="bg-red-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-red-600 transition inline-block"
+                            (click)="deleteLote(lote.id_lote!)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
