@@ -78,6 +78,14 @@ export const routes: Routes = [
         loadComponent:()=>import('./business/boleta-salida/boleta-salida.component')
       },
       {
+        path:'proveedor',
+        loadComponent:()=>import('./business/proveedores/proveedores.component')
+      },
+      {
+        path:'compras',
+        loadComponent:()=>import('./business/compras-page/compras-page.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
