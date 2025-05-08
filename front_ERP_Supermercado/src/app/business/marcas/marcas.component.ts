@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Marca } from '../../../interface/marca.interface';
 import { MarcaService } from '../../../services/marca.service';
 import { FormsModule } from '@angular/forms';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-marcas',
@@ -15,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 })
 export default class MarcasComponent {
   private marcaService = inject(MarcaService);
+  private _bitacoraservices= inject(BitacoraService);
   private toastr = inject(ToastrService);
 
   //atributos para los formularios
@@ -40,8 +42,8 @@ export default class MarcasComponent {
     const nombre: string = this.nombre();
     this.marcaService.registrarMarca(nombre).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.toastr.success("Registro exitoso");
+        this._bitacoraservices.ActualizarBitacora("Agregó una nueva Marca: "+nombre);
       },
       error: (e: HttpErrorResponse) => {
         console.error('Error:', e);  // Agrega un log completo para ver todo el error
@@ -77,8 +79,8 @@ export default class MarcasComponent {
     const nuevoNombre: string = this.nuevoNombre();
     this.marcaService.actualizarMarca(id, nuevoNombre).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.toastr.success("Actualizacion exitosa");
+        this._bitacoraservices.ActualizarBitacora("Actualizó una Marca con id: "+id);
       },
       error: (e: HttpErrorResponse) => {
         console.error('Error:', e);  // Agrega un log completo para ver todo el error

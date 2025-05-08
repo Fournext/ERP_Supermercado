@@ -23,6 +23,24 @@
 
     <form class="space-y-4">
       <!-- Nombre -->
+      <div *ngIf="!update" 
+      class="grid grid-cols-1 gap-3">
+        <label for="nombre">Usuario</label>
+        <input [(ngModel)]="personalModal.username" type="text" id="username" name="username" placeholder="Usuario del Personal"
+          class="border bg-transparent placeholder-gray-400 border-gray-500 p-2 rounded w-full" required />
+      </div>
+      <div *ngIf="!update"  
+      class="grid grid-cols-1 gap-3">
+        <label for="nombre">Correo</label>
+        <input [(ngModel)]="personalModal.email" type="text" id="email" name="email" placeholder="Correo del Personal"
+          class="border bg-transparent placeholder-gray-400 border-gray-500 p-2 rounded w-full" required />
+      </div>
+      <div *ngIf="!update"  
+      class="grid grid-cols-1 gap-3">
+        <label for="nombre">Contraseña</label>
+        <input [(ngModel)]="personalModal.password" type="password" id="password" name="password" placeholder="Contraseña del Personal"
+          class="border bg-transparent placeholder-gray-400 border-gray-500 p-2 rounded w-full" required />
+      </div>
       <div class="grid grid-cols-1 gap-3">
         <label for="nombre">Nombre</label>
         <input [(ngModel)]="personalModal.nombre" type="text" id="nombre" name="nombre" placeholder="Nombre del Personal"
@@ -60,18 +78,6 @@
           class="border bg-transparent placeholder-gray-400 border-gray-500 p-2 rounded w-full" required>
           <option value="" disabled selected>Seleccione un Turno</option>
           <option *ngFor="let turno of turnos" [value]="turno.id_turno">{{ turno.descripcion }}</option>
-        </select>
-      </div>
-
-      <!-- ID Usuario dinámico -->
-      <div class="grid grid-cols-1 gap-3">
-        <label for="idUsuario">Usuario</label>
-        <select id="idUsuario" name="idUsuario" [(ngModel)]="personalModal.idUsuario"
-          class="border bg-transparent placeholder-gray-400 border-gray-500 p-2 rounded w-full" required>
-          <option value="" disabled selected>Seleccione un Usuario</option>
-          <option *ngFor="let user of users" [value]="user.id">
-            {{ user.username }}
-          </option>
         </select>
       </div>
 

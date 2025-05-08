@@ -5,6 +5,7 @@ import { Categoria } from '../../../interface/categoria.interface';
 import { CategoriaService } from '../../../services/categoria.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-categoria',
@@ -15,6 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export default class CategoriaComponent {
 
+  private _bitacoraservices= inject(BitacoraService);
   private categoriaService = inject(CategoriaService);
   private toastr = inject(ToastrService);
 
@@ -32,6 +34,7 @@ export default class CategoriaComponent {
     this.categoriaService.registrarCategoria(nombre).subscribe({
       next: (response: any) => {
         console.log(response);
+        this._bitacoraservices.ActualizarBitacora("Agregó una nueva Categoria: "+nombre);
         this.toastr.success("Registro exitoso");
       },
       error: (e: HttpErrorResponse) => {
@@ -68,8 +71,8 @@ export default class CategoriaComponent {
     const nuevoNombre: string = this.nuevoNombre();
     this.categoriaService.actualizarCategoria(id, nuevoNombre).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.toastr.success("Actualizacion exitosa");
+        this._bitacoraservices.ActualizarBitacora("Actualizó una Categoria con id: "+id);
       },
       error: (e: HttpErrorResponse) => {
         console.error('Error:', e);  // Agrega un log completo para ver todo el error

@@ -20,4 +20,8 @@ public class userSV {
         return userRP.findByUsername(username);
     }
 
+    public String obtenerRolPorUsername(String username) {
+        return userRP.obtenerRolDeUsuario(username);
+    }
+
 }

@@ -8,6 +8,7 @@ import { CategoriaService } from '../../../services/categoria.service';
 import { ProductoConPrecio } from '../../../interface/producto.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-products',
@@ -21,6 +22,7 @@ export default class ProductsComponent {
   private marcaService = inject(MarcaService);
   private categoriaService = inject(CategoriaService);
   private toastr = inject(ToastrService);
+  private _bitacoraservices= inject(BitacoraService);
 
   public listaProductos = computed(() => this.productoService.listaProductos());
   public listaImagenes = computed(() => this.imagenService.listaImagenes());
@@ -142,6 +144,7 @@ public trackProductos(index: number, producto: any): number {
       next: (resp: any) => {
         console.log(resp);
         this.toastr.success("Registro exitoso");
+        this._bitacoraservices.ActualizarBitacora("Agregó una nuevo Producto: "+descripcion);
       },
       error: (e: HttpErrorResponse) => {
         console.error('Error:', e);  // Agrega un log completo para ver todo el error
@@ -191,6 +194,7 @@ public trackProductos(index: number, producto: any): number {
       next: (resp: any) => {
         console.log(resp);
         this.toastr.success("Registro exitoso");
+        this._bitacoraservices.ActualizarBitacora("Actualizó un Producto con ID: "+id);
       },
       error: (e: HttpErrorResponse) => {
         console.error('Error:', e);  // Agrega un log completo para ver todo el error

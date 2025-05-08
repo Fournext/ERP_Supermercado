@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SectorService } from '../../../services/sector.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-sector',
@@ -24,6 +25,7 @@ export default class SectorComponent implements OnInit{
   constructor(
     private toastr: ToastrService,
     private sectorServices: SectorService,
+    private _bitacoraservices: BitacoraService,
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +71,7 @@ export default class SectorComponent implements OnInit{
           next: (response: any) => {  
             this.toastr.success('Sector Actualizado correctamente.', 'Éxito');
             this.getSectores();
+            this._bitacoraservices.ActualizarBitacora("Editó el Sector con ID y nombre: "+this.nuevoSector.id_sector+" -- "+this.nuevoSector.nombre);
             this.cerrarModal(); 
           },
           error: (e: HttpErrorResponse) => {
@@ -82,6 +85,7 @@ export default class SectorComponent implements OnInit{
         next: (response: any) => {  
           this.toastr.success('Sector Insertado correctamente.', 'Éxito');
           this.getSectores();
+          this._bitacoraservices.ActualizarBitacora("Agregó el Sector con nombre: "+this.nuevoSector.nombre);
           this.cerrarModal();
         },
         error: (e: HttpErrorResponse) => {
@@ -94,7 +98,7 @@ export default class SectorComponent implements OnInit{
     this.cerrarModal();
   }
 
-  eliminarAlmacen(id: number) {
+  eliminarAlmacen(sector:Sector) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto!",
@@ -106,10 +110,11 @@ export default class SectorComponent implements OnInit{
       cancelButtonText: 'Cancelar'
     }).then((result:any) => {
       if (result.isConfirmed) {
-        this.sectorServices.deleteSector(id).subscribe({
+        this.sectorServices.deleteSector(sector.id_sector!).subscribe({
           next:(response:any) => {
             this.toastr.warning('Sector eliminado correctamente.', 'Éxito');
             this.getSectores();
+            this._bitacoraservices.ActualizarBitacora("Eliminó el Sector con ID y nombre: "+sector.id_sector+" -- "+sector.nombre);
           },
           error:(e: HttpErrorResponse) => {
             const errorMessage = e.error?.detail || e.error?.message || 'Error al insertar';  

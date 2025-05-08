@@ -74,6 +74,10 @@ export const routes: Routes = [
         loadComponent:()=>import('./business/repisa/repisa.component')
       },
       {
+        path:'boleta_salida',
+        loadComponent:()=>import('./business/boleta-salida/boleta-salida.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

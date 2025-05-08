@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PanelADMComponent } from './panel-adm.component';
+import { BoletaSalidaComponent } from './boleta-salida.component';
 
-describe('PanelADMComponent', () => {
-  let component: PanelADMComponent;
-  let fixture: ComponentFixture<PanelADMComponent>;
+describe('BoletaSalidaComponent', () => {
+  let component: BoletaSalidaComponent;
+  let fixture: ComponentFixture<BoletaSalidaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PanelADMComponent]
+      imports: [BoletaSalidaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PanelADMComponent);
+    fixture = TestBed.createComponent(BoletaSalidaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

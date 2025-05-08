@@ -18,4 +18,12 @@ export class UserService {
     listarUsuarios(): Observable<User[]> {
         return this.http.get<User[]>(`${this.myAppUrl}${this.myApiUrl}/getUsers`);
     }
+    getUsuario(username: string): Observable<User> {
+        return this.http.get<User>(`${this.myAppUrl}${this.myApiUrl}/getUser/${username}`);
+    }
+
+    verifRol(username: string): Observable<any> {
+        console.log(username)
+        return this.http.get<any>(`${this.myAppUrl}${this.myApiUrl}/rol/${username}`);
+    }
 }
