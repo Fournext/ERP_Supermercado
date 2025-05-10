@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-6 relative">
+  <!-- Encabezado de la boleta -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <h2 class="text-2xl font-bold">Boleta de Compra</h2>
+      <p class="text-sm text-gray-500">ID: {{boletaCompra().idBoletaCompra}}</p>
+      <p class="text-sm text-gray-500">Fecha: {{boletaCompra().fecha}}</p>
+      <p class="text-sm text-gray-500">Estado: {{boletaCompra().estado}}</p>
+    </div>
+    <div class="text-right space-y-1">
+      <p>
+        <button
+        (click)="cerrarBoletaCompra()"
+        class="absolute top-1 right-6 bg-red-500 px-2 rounded-[5px]">X</button>
+      </p>
+      <p class="text-sm text-gray-600">Proveedor: {{buscarProveedor(boletaCompra().idProveedor)}} </p>
+      <p class="text-sm text-gray-600">Método de Pago: {{buscarMetodo(boletaCompra().idMetodoPago)}}</p>
+      <p class="text-xl font-semibold text-gray-800">Total: Bs. {{boletaCompra().costoTotal}}</p>
+    </div>
+  </div>
+
+  <!-- Tabla de detalles -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-2">Código</th>
+          <th class="px-4 py-2">Descripción</th>
+          <th class="px-4 py-2">Cantidad</th>
+          <th class="px-4 py-2">Costo Unitario</th>
+          <th class="px-4 py-2">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        @for (detalle of listaDetalles(); track detalle.idDetalle) {
+          <tr>
+            <td class="px-4 py-2">{{ detalle.codigoProducto }}</td>
+            <td class="px-4 py-2">{{ detalle.descripcion }}</td>
+            <td class="px-4 py-2">{{ detalle.cantidad }}</td>
+            <td class="px-4 py-2">Bs. {{ detalle.costoUnitario }}</td>
+            <td class="px-4 py-2">Bs. {{ detalle.cantidad * detalle.costoUnitario }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+

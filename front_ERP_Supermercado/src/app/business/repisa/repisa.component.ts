@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-repisa',
@@ -32,6 +33,7 @@ export default class RepisaComponent implements OnInit {
     private toastr: ToastrService,
     private repisaServices: RepisaService,
     private sectorServices: SectorService,
+    private _bitacoraservices: BitacoraService,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +87,7 @@ export default class RepisaComponent implements OnInit {
         next: (response: any) => {
           this.toastr.success('Repisa actualizada correctamente.', 'Éxito');
           this.getRepisas();
+          this._bitacoraservices.ActualizarBitacora("Edito la Repisa con ID y COD: "+this.nuevaRepisa.id_repisa+" -- "+this.nuevaRepisa.codigo);
           this.cerrarModal();
         },
         error: (e: HttpErrorResponse) => {
@@ -97,6 +100,7 @@ export default class RepisaComponent implements OnInit {
         next: (response: any) => {
           this.toastr.success('Repisa insertada correctamente.', 'Éxito');
           this.getRepisas();
+          this._bitacoraservices.ActualizarBitacora("Registró la Repisa con COD: "+this.nuevaRepisa.codigo);
           this.cerrarModal();
         },
         error: (e: HttpErrorResponse) => {
@@ -107,7 +111,7 @@ export default class RepisaComponent implements OnInit {
     }
   }
 
-  eliminarAlmacen(id: number) {
+  eliminarAlmacen(repisa:Repisa) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto!",
@@ -119,10 +123,11 @@ export default class RepisaComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result:any) => {
       if (result.isConfirmed) {
-        this.repisaServices.deleteRepisa(id).subscribe({
+        this.repisaServices.deleteRepisa(repisa.id_repisa!).subscribe({
           next: (response: any) => {
             this.toastr.warning('Repisa eliminada correctamente.', 'Éxito');
             this.getRepisas();
+            this._bitacoraservices.ActualizarBitacora("Eliminó la Repisa con ID y COD: "+repisa.id_repisa+" -- "+repisa.codigo);
           },
           error: (e: HttpErrorResponse) => {
             const errorMessage = e.error?.detail || e.error?.message || 'Error al eliminar';

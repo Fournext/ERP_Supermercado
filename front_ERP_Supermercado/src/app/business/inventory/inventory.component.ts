@@ -11,6 +11,7 @@ import { Repisa } from '../../../interface/repisa';
 import { AlmacenService } from '../../../services/almacen.service';
 import { Almacen } from '../../../interface/almacen';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-inventory',
@@ -27,6 +28,8 @@ export default class InventoryComponent implements OnInit {
     private productoServices: ProductoService,
     private repisaServices: RepisaService,
     private alamcenServices: AlmacenService,
+    private _bitacoraservices: BitacoraService,
+    
   ) {}
 
   lotes: Lote[] = [];
@@ -108,6 +111,7 @@ export default class InventoryComponent implements OnInit {
           next:(response: any)=> {
             this.toastr.success('Lote Actualizado correctamente.', 'Éxito');
             this.getLotes();
+            this._bitacoraservices.ActualizarBitacora("Actualizó un Lote con ID y producto: "+this.newLote.id_lote+" -- "+this.newLote.descripcion_producto);
             this.toggleForm();
           },
           error: (e: HttpErrorResponse) => {
@@ -121,6 +125,7 @@ export default class InventoryComponent implements OnInit {
         next:(response:any) =>{
           this.toastr.success('Lote Insertado correctamente.', 'Éxito');
           this.getLotes();
+          this._bitacoraservices.ActualizarBitacora("Agregó un nuevo Lote del producto: "+this.newLote.descripcion_producto);
           this.toggleForm();
         },
         error: (e: HttpErrorResponse) => {
@@ -139,11 +144,12 @@ export default class InventoryComponent implements OnInit {
     }
   }
 
-  deleteLote(id: number) {
-    this.loteServices.deleteLote(id).subscribe({
+  deleteLote(lote: Lote) {
+    this.loteServices.deleteLote(lote.id_lote!).subscribe({
       next:(response:any) => {
         this.toastr.success('Lote Eliminado correctamente.', 'Éxito');
         this.getLotes();
+        this._bitacoraservices.ActualizarBitacora("Elimino Lote con ID del producto: "+lote.id_lote+ " -- "+lote.descripcion_producto);
       },
       error: (e: HttpErrorResponse) => {
         const errorMessage = e.error?.detail || e.error?.message || 'Error al Eliminar';

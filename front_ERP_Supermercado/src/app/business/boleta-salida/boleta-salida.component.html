@@ -1,0 +1,105 @@
+<div class="p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Gestión de Boletas de Salida</h1>
+  
+    <div class="flex justify-between mb-6">
+      <input
+        type="text"
+        [(ngModel)]="filtroInfoLote"
+        class="border rounded px-4 py-2 w-1/2"
+        placeholder="Buscar por Informacion de lote"
+      >
+      <button (click)="abrirModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        Añadir Boleta de Salida
+      </button>
+    </div>
+  
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 rounded text-center">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-2 px-4 border-b text-center">ID</th>
+            <th class="py-2 px-4 border-b text-center">Informacion de lote</th>
+            <th class="py-2 px-4 border-b text-center">Nombre del Personal</th>
+            <th class="py-2 px-4 border-b text-center">Fecha</th>
+            <th class="py-2 px-4 border-b text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let boleta_salida of boleta_salidaListFiltered()" class="hover:bg-gray-50">
+            <td class="py-2 px-4 border-b">{{ boleta_salida.id_boleta }}</td>
+            <td class="py-2 px-4 border-b">{{ boleta_salida.lote_info }}</td>
+            <td class="py-2 px-4 border-b">{{ boleta_salida.nombre_personal }}</td>
+            <td class="py-2 px-4 border-b">{{ boleta_salida.fecha }}</td>
+            <td class="py-2 px-4 border-b">
+              <button (click)="eliminarBoleta_Salida(boleta_salida.id_boleta!, boleta_salida.nombre_personal!)" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Modal -->
+<div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-8 rounded-lg w-full max-w-md shadow-lg relative">
+      <h2 class="text-xl font-bold mb-6 text-gray-800">
+        {{ editando ? 'Editar Boleta de Salida' : 'Añadir Boleta de Salida' }}
+      </h2>
+  
+      <div class="space-y-4">
+        <!-- Lote -->
+        <div>
+        <label class="block mb-1 font-semibold">Lote:</label>
+        <select
+            [(ngModel)]="nuevaBoletaSalida.id_lote"
+            class="border rounded px-4 py-2 w-full"
+        >
+            <option value="">Seleccione el Lote</option>
+            <option *ngFor="let lote of getLotesActivos()" [value]="lote.id_lote">
+                {{ lote.id_lote }} - {{ lote.descripcion_producto }}
+            </option>      
+        </select>
+        </div>
+
+        <!-- Personal -->
+        <div>
+          <label class="block mb-1 font-semibold">Personal:</label>
+          <select
+            [(ngModel)]="nuevaBoletaSalida.id_personal"
+            class="border rounded px-4 py-2 w-full"
+          >
+            <option value="">Seleccione al Empleado</option>
+            <option *ngFor="let personal of personalList" [value]="personal.id_personal">
+              {{ personal.nombre }} {{ personal.apellido }}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Fecha -->
+        <div>
+          <label class="block mb-1 font-semibold">Fecha:</label>
+          <input
+            type="date"
+            [(ngModel)]="nuevaBoletaSalida.fecha"
+            class="border rounded px-4 py-2 w-full"
+          />
+        </div>
+      </div>
+  
+      <div class="flex justify-end mt-6 space-x-4">
+        <button (click)="cerrarModal()" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded">
+          Cancelar
+        </button>
+        <button (click)="guardarBoleta_salida()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+          {{ editando ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+  
+      <button (click)="cerrarModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+        ✕
+      </button>
+    </div>
+  </div>  
+</div>
+  

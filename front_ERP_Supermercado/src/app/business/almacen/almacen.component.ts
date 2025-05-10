@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AlmacenService } from '../../../services/almacen.service';
 import { Almacen } from '../../../interface/almacen';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BitacoraService } from '../../../services/bitacora.service';
 
 @Component({
   selector: 'app-almacen',
@@ -25,6 +26,7 @@ export default class AlmacenComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private almaceneServices: AlmacenService,
+    private _bitacoraservices: BitacoraService,
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +72,7 @@ export default class AlmacenComponent implements OnInit {
           next: (response: any) => {  
             this.toastr.success('Almacén Actualizado correctamente.', 'Éxito');
             this.getAlmacenes();
+            this._bitacoraservices.ActualizarBitacora("Edito el Almacen con ID y COD: "+this.nuevoAlmacen.id_almacen+" -- "+this.nuevoAlmacen.codigo);
             this.cerrarModal(); 
           },
           error: (e: HttpErrorResponse) => {
@@ -83,6 +86,7 @@ export default class AlmacenComponent implements OnInit {
         next: (response: any) => {  
           this.toastr.success('Almacén Insertado correctamente.', 'Éxito');
           this.getAlmacenes();
+          this._bitacoraservices.ActualizarBitacora("Agregó un nuevo Almacen con COD: "+this.nuevoAlmacen.codigo);
           this.cerrarModal();
         },
         error: (e: HttpErrorResponse) => {
@@ -95,7 +99,7 @@ export default class AlmacenComponent implements OnInit {
     this.cerrarModal();
   }
 
-  eliminarAlmacen(id: number) {
+  eliminarAlmacen(almacen:Almacen) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto!",
@@ -107,10 +111,11 @@ export default class AlmacenComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result:any) => {
       if (result.isConfirmed) {
-        this.almaceneServices.deleteAlmacen(id).subscribe({
+        this.almaceneServices.deleteAlmacen(almacen.id_almacen!).subscribe({
           next:(response:any) => {
             this.toastr.warning('Almacén eliminado correctamente.', 'Éxito');
             this.getAlmacenes();
+            this._bitacoraservices.ActualizarBitacora("Elimino el Almacen con ID y COD: "+almacen.id_almacen+" -- "+almacen.codigo);
           },
           error:(e: HttpErrorResponse) => {
             const errorMessage = e.error?.detail || e.error?.message || 'Error al insertar';  
