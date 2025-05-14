@@ -114,7 +114,7 @@ public class BackupController {
             String psqlPath = detectarPsql();
             String host = probarConexion(psqlPath, "localhost") ? "localhost" : "postgres";
 
-            // ✅ TRUNCATE dinámico con PERFORM set_config (más robusto)
+            // ✅ Paso 1: TRUNCATE dinámico seguro
             String dynamicTruncate = "DO $$ " +
                     "DECLARE r RECORD; " +
                     "BEGIN " +
@@ -125,33 +125,12 @@ public class BackupController {
                     "PERFORM set_config('session_replication_role', 'origin', false); " +
                     "END $$;";
 
-            ProcessBuilder truncateBuilder = new ProcessBuilder(
-                    psqlPath,
-                    "-h", host,
-                    "-U", "postgres",
-                    "-d", "DB_supermarket",
-                    "-c", dynamicTruncate
-            );
-            truncateBuilder.environment().put("PGPASSWORD", "071104");
-            truncateBuilder.redirectErrorStream(true);
-            Process truncateProcess = truncateBuilder.start();
-
-            StringBuilder resultadoTruncate = new StringBuilder();
-            try (InputStream is = truncateProcess.getInputStream()) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = is.read(buffer)) != -1) {
-                    resultadoTruncate.append(new String(buffer, 0, bytesRead));
-                }
-            }
-
-            int exitCodeTruncate = truncateProcess.waitFor();
-            if (exitCodeTruncate != 0) {
+            if (!ejecutarSQL(psqlPath, host, dynamicTruncate)) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error al hacer TRUNCATE dinámico. Código: " + exitCodeTruncate + "\n" + resultadoTruncate);
+                        .body("Error al hacer TRUNCATE dinámico.");
             }
 
-            // ✅ Restaurar el backup
+            // ✅ Paso 2: Restaurar el backup
             ProcessBuilder restoreBuilder = new ProcessBuilder(
                     psqlPath,
                     "-h", host,
@@ -180,7 +159,26 @@ public class BackupController {
                         .body("Error al restaurar. Código: " + exitCode + "\n" + resultado);
             }
 
-            return ResponseEntity.ok("Restauración completada correctamente.\n" + resultado);
+            // ✅ Paso 3: Reset automático de secuencias
+            String resetSequences = "DO $$ " +
+                    "DECLARE r RECORD; " +
+                    "BEGIN " +
+                    "FOR r IN (SELECT c.relname AS sequence_name, t.relname AS table_name, a.attname AS column_name " +
+                    "FROM pg_class c " +
+                    "JOIN pg_depend d ON d.objid = c.oid " +
+                    "JOIN pg_class t ON d.refobjid = t.oid " +
+                    "JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = d.refobjsubid " +
+                    "WHERE c.relkind = 'S' AND d.classid = 'pg_class'::regclass AND d.deptype IN ('a')) LOOP " +
+                    "EXECUTE 'SELECT setval(''' || r.sequence_name || ''', COALESCE((SELECT MAX(' || r.column_name || ') FROM ' || quote_ident(r.table_name) || '), 1), false)'; " +
+                    "END LOOP; " +
+                    "END $$;";
+
+            if (!ejecutarSQL(psqlPath, host, resetSequences)) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error al resetear secuencias.");
+            }
+
+            return ResponseEntity.ok("Restauración y reset de secuencias completados correctamente.\n" + resultado);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,6 +186,38 @@ public class BackupController {
                     .body("Error al intentar restaurar: " + e.getMessage());
         }
     }
+
+    private boolean ejecutarSQL(String psqlPath, String host, String sql) {
+        try {
+            ProcessBuilder builder = new ProcessBuilder(
+                    psqlPath,
+                    "-h", host,
+                    "-U", "postgres",
+                    "-d", "DB_supermarket",
+                    "-c", sql
+            );
+            builder.environment().put("PGPASSWORD", "071104");
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+            StringBuilder salida = new StringBuilder();
+            try (InputStream is = process.getInputStream()) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    salida.append(new String(buffer, 0, bytesRead));
+                }
+            }
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.err.println("Error al ejecutar SQL dinámico:\n" + salida);
+            }
+            return exitCode == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 
     private boolean probarConexion(String psqlPath, String host) {
