@@ -11,7 +11,14 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Imagen final para ejecutar el .jar
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jdk-jammy
+
+# Instalar cliente PostgreSQL 17 desde el repositorio oficial
+RUN apt-get update && apt-get install -y curl gnupg2 lsb-release && \
+    curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/postgresql-keyring.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && apt-get install -y postgresql-client-17 && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

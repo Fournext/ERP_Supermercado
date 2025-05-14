@@ -86,6 +86,10 @@ export const routes: Routes = [
         loadComponent:()=>import('./business/compras-page/compras-page.component')
       },
       {
+        path:'backup',
+        loadComponent:()=>import('./business/backup/backup.component')
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
