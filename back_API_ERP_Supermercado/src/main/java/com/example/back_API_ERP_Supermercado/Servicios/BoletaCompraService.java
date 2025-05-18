@@ -5,6 +5,8 @@ import com.example.back_API_ERP_Supermercado.Entidad.BoletaCompra;
 import com.example.back_API_ERP_Supermercado.Entidad.DetalleBoletaCompra;
 import com.example.back_API_ERP_Supermercado.Repositorio.BoletaCompraRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +41,13 @@ public class BoletaCompraService {
             throw new RuntimeException("Boleta de compra no encontrada");
         }
     }
-
-
-
+    public BoletaCompra obtenerBoleta(Integer id){
+        Optional<BoletaCompra> boletaExistente=this.boletaCompraRepositorio.findById(id);
+        if(boletaExistente.isPresent()){
+            return boletaExistente.get();
+        }else{
+            throw new RuntimeException("Boleta de compra no encontrada");
+        }
+    }
 
 }

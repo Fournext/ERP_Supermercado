@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/boleta_compra")
@@ -37,5 +38,15 @@ public class BoletaCompraController {
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo actualizar la boleta de compra con id:"+id);
         }
+    }
+
+    @GetMapping("/obtener")
+    public ResponseEntity<?> obtenerBoleta(@RequestParam Integer id){
+       try{
+           BoletaCompra boletaActual=this.boletaCompraService.obtenerBoleta(id);
+           return ResponseEntity.status(HttpStatus.OK).body(boletaActual);
+       } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Boleta de compra no encontrada");
+       }
     }
 }

@@ -13,7 +13,7 @@ export class ComprasService {
   private complementoUrl = 'boleta_compra';
 
   //propiedades para el manejo de datos globales
-  verBoleta=signal<boolean>(false);
+  verBoleta = signal<boolean>(false);
 
   listaBoletaCompra = signal<BoletaCompra[]>([]);
   boletaCompraActual = signal<BoletaCompra>({
@@ -24,9 +24,9 @@ export class ComprasService {
     idMetodoPago: 0,
     estado: ''
   });
-  listaDetalleActual=signal<DetalleCompra[]>([]);
+  listaDetalleActual = signal<DetalleCompra[]>([]);
 
-  verBoletaSwitch(){
+  verBoletaSwitch() {
     this.verBoleta.set(!this.verBoleta());
   }
 
@@ -83,6 +83,14 @@ export class ComprasService {
         this.getBoletaCompras();
       })
     )
+  }
+
+  obtenerBoleta(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${this.complementoUrl}/obtener`, {
+      params: {
+        id: id
+      }
+    });
   }
 
   constructor() { }

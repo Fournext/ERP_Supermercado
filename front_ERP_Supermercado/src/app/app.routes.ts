@@ -84,6 +84,9 @@ export const routes: Routes = [
       {
         path:'compras',
         loadComponent:()=>import('./business/compras-page/compras-page.component')
+      },{
+        path:'boleta_entrada',
+        loadComponent:()=>import('./business/boleta-entrada/boleta-entrada.component')
       },
       {
         path: '',

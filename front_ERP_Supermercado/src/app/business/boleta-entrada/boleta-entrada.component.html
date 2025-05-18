@@ -1,0 +1,132 @@
+<section class="w-full flex flex-col gap-6  p-6 rounded-lg">
+
+  <!-- Encabezado -->
+  <h2 class="text-2xl font-bold text-center text-black">Registrar Boleta de Entrada</h2>
+
+  <!-- Fila de controles -->
+  <div class="bg-white p-6 rounded-lg shadow-2xl ">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+      <!-- Fecha -->
+      <div class="flex flex-col">
+        <label for="fecha" class="text-sm font-semibold text-gray-700">Fecha</label>
+        <input (input)="fechaFormateado($event)" id="fecha" type="date"
+          class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </div>
+
+      <!-- Empleado -->
+      <div class="flex flex-col">
+        <label for="empleado" class="text-sm font-semibold text-gray-700">Empleado</label>
+        <select (change)="asignarEmpleado($event)" id="empleado"
+          class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <option value="">Seleccionar empleado</option>
+          @for (personal of listaEmpleados(); track personal.id_personal) {
+          @if(personal.idRol==1){
+          <option value="{{personal.id_personal}}">{{personal.nombre}} : {{personal.carnet}}</option>
+          }
+          }
+        </select>
+      </div>
+
+      <!-- Boleta compra -->
+      <div class="flex flex-col">
+        <label for="boleta" class="text-sm font-semibold text-gray-700">Boleta compra</label>
+        <input [value]="idBoleta()" (input)="idBoleta.set(txtBoleta.value)" #txtBoleta id="boleta" type="text"
+          placeholder="Ingresar identificador"
+          class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </div>
+
+      <!-- Botón iniciar -->
+      <div class="flex flex-col justify-end items-end ">
+        <button (click)="iniciarBoletaEntrada()"
+          class=" w-[50%] px-6 py-2 rounded-[10px] border-2 border-black bg-blue-700 text-white hover:bg-blue-800 transition-all">
+          INICIAR
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="bg-white p-4 rounded-lg shadow-2xl  overflow-auto">
+    <div class="grid grid-cols-6 gap-4 bg-gray-200 text-sm font-semibold px-4 py-2 rounded-t-md text-center">
+      <div>Producto</div>
+      <div>Cant. comprada</div>
+      <div>Cant. aceptada</div>
+      <div>Costo</div>
+      <div>Acciones</div>
+      <div>lote</div>
+    </div>
+    <div class="space-y-2">
+      @for (detalle of boletaEntradaService.listaDetalleActual(); track detalle.idProducto) {
+      <detalle-item [detalle]="detalle" />
+      }
+    </div>
+  </div>
+
+  <!-- Área de detalles y botón -->
+  <div class="bg-white p-4 rounded-lg shadow-2xl  flex flex-col md:flex-row justify-between items-start gap-4">
+
+    <!-- Textarea -->
+    <textarea [value]="descripcion()" (input)="descripcion.set(txtDetalle.value)" #txtDetalle rows="6"
+      placeholder="Escribe los detalles aquí..."
+      class="w-full md:w-2/3 px-4 py-2 border border-gray-400 rounded-md text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none">
+       adjfnakshdbgfakshdbfkasjdbfkasjdbfhsdbfjahsdbfahsbdfkahsbdfahkjsbdfkasbdfkjasd
+       asdhfbjashdbfkasdbfkasjdbfkasjdbfkasjdbfkasjdbfkasjdbfkasjdbfkajsdf
+       kJDSBFKASJDBFKAJSBDFKASJDBFKASJDFBKJSDF
+    </textarea>
+
+    <!-- Botón registrar -->
+    <button (click)="registrarBoletaEntrada()"
+      class="w-full md:w-auto px-6 py-2 rounded-[10px] bg-blue-700 text-white hover:bg-blue-800 transition-all self-center md:self-end">
+      REGISTRAR BOLETA
+    </button>
+  </div>
+
+  <div class="bg-white shadow-xl rounded-[10px] p-4 space-y-4">
+    <h3 class="text-lg font-semibold text-center">BOLETAS DE ENTRADAS REGISTRADAS</h3>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm text-left">
+        <thead class="bg-gray-200 text-gray-700 uppercase sticky top-0">
+          <tr>
+            <th class="px-4 py-2">ID</th>
+            <th class="px-4 py-2">Fecha</th>
+            <th class="px-4 py-2">Empleado</th>
+            <th class="px-4 py-2">Boleta de compra</th>
+            <th class="py-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          @for (boleta of listaBoletaEntradas(); track boleta.idBoleta) {
+          <tr>
+            <td class="px-4 py-2">{{boleta.idBoleta}}</td>
+            <td class="px-4 py-2">{{boleta.fecha}}</td>
+            <td class="px-4 py-2">{{buscarPersonal(boleta.idPersonal)}}</td>
+            <td class="px-4 py-2">{{boleta.idBoletaCompra}}</td>
+            <td>
+              <button (click)="mostrarBoletaEntrada(boleta)" class="bg-amber-300  px-2 py-1 rounded-[5px]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="size-6 text-black">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg></button>
+              <button
+              (click)="eliminarBoletaEntrada(boleta)"
+              class="bg-red-500 px-2 py-1 rounded-[5px] ml-2"><svg xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                </svg></button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    @if(boletaEntradaService.mostrarModal()){
+    <boleta-entrada-completa class="fixed  z-30 w-full h-full bg-[rgba(0,0,0,0.5)] flex justify-center items-center rounded-2xl top-0 left-0"/>
+    }
+  </div>
+</section>
