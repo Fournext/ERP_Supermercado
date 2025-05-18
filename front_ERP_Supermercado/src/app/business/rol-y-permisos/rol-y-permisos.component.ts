@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { rol } from '../../../interface/roles';
 import { RolesService } from '../../../services/roles.service';
+import { Permiso } from '../../../interface/permiso';
+import { PermisosService } from '../../../services/permisos.service';
 
 @Component({
   selector: 'app-rol-y-permisos',
@@ -16,7 +18,17 @@ export default class RolYPermisosComponent {
   rolModal: rol = {} as rol;
   update: boolean = false;
 
-  constructor(private rolService: RolesService) { }
+  mostrarModalPermisos = false;
+  rolSeleccionado: rol | null = null;
+  nuevoPermiso: Permiso = { vista: '', ver: false, insertar: false, editar: false, eliminar: false, idRol: 0 };
+  vistasDisponibles = ['Dashboard', 'Usuario', 'Producto', 'Compra', 'Boleta De Salida', 'Almacen']; // etc
+  permisosList: Permiso[] = [];
+
+  constructor(
+    private rolService: RolesService,
+    private permisosService: PermisosService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.listarRoles();
@@ -69,6 +81,62 @@ export default class RolYPermisosComponent {
     this.mostrarModal = false;
     this.rolModal = {} as rol;
     this.update = false;
+  }
+
+
+abrirModalPermisos(rol: rol) {
+    this.rolSeleccionado = rol;
+    this.mostrarModalPermisos = true;
+    this.nuevoPermiso = {
+      vista: '', ver: false, insertar: false, editar: false, eliminar: false, idRol: rol.id_rol!
+    };
+
+    this.permisosService.getPermisoRol(rol.id_rol!).subscribe((permisos: Permiso[]) => {
+      this.permisosList = [...permisos]; // Forzar nueva referencia
+      this.cdr.detectChanges(); // 🔥 Forzar render si Angular no detecta cambios
+    });
+  }
+
+  cerrarModalPermisos() {
+    this.mostrarModalPermisos = false;
+    this.rolSeleccionado = null;
+    this.permisosList = [];
+  }
+
+  agregarPermiso() {
+    if (!this.rolSeleccionado) return;
+
+    if (this.rolSeleccionado.id_rol === undefined) return;
+    const permisoConRol = {
+      ...this.nuevoPermiso,
+      idRol: this.rolSeleccionado.id_rol as number
+    };
+
+    this.permisosService.newPermiso(permisoConRol).subscribe(() => {
+      this.permisosService.getPermisoRol(this.rolSeleccionado!.id_rol!).subscribe(permisos => {
+        this.permisosList = [...permisos];
+        this.nuevoPermiso = {
+          vista: '', ver: false, insertar: false, editar: false, eliminar: false, idRol: this.rolSeleccionado!.id_rol!
+        };
+        this.cdr.detectChanges();
+      });
+    });
+  }
+
+  editarPermiso(permiso: Permiso) {
+    this.nuevoPermiso = { ...permiso };
+  }
+
+  eliminarPermiso(permiso: Permiso) {
+    if (!permiso.id_permiso) return;
+    this.permisosService.deletePermiso(permiso.id_permiso).subscribe(() => {
+      this.permisosList = this.permisosList.filter(p => p.id_permiso !== permiso.id_permiso);
+      this.cdr.detectChanges();
+    });
+  }
+
+  trackByPermiso(index: number, permiso: Permiso): any {
+    return permiso.id_permiso || index;
   }
 
 }

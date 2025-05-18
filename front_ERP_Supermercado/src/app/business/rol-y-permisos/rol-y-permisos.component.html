@@ -37,6 +37,64 @@
     </div>
 </div>
 
+<!-- Modal Permisos -->
+<div *ngIf="mostrarModalPermisos" class="fixed inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl relative">
+    <button (click)="cerrarModalPermisos()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl">&times;</button>
+    <h2 class="text-2xl font-semibold mb-6 text-center">Gestionar Permisos para Rol: {{ rolSeleccionado?.nombre }}</h2>
+
+    <!-- Formulario de Permiso -->
+    <form class="grid grid-cols-2 gap-4 mb-6 items-center">
+      <select [(ngModel)]="nuevoPermiso.vista" name="vista" class="col-span-2 border border-gray-400 rounded p-2">
+        <option disabled selected value="">Seleccione una vista</option>
+        <option *ngFor="let vista of vistasDisponibles" [value]="vista">{{ vista }}</option>
+      </select>
+
+      <label><input type="checkbox" [(ngModel)]="nuevoPermiso.ver" name="ver" /> Ver</label>
+      <label><input type="checkbox" [(ngModel)]="nuevoPermiso.insertar" name="insertar" /> Insertar</label>
+      <label><input type="checkbox" [(ngModel)]="nuevoPermiso.editar" name="editar" /> Editar</label>
+      <label><input type="checkbox" [(ngModel)]="nuevoPermiso.eliminar" name="eliminar" /> Eliminar</label>
+
+      <div class="col-span-2 text-center mt-2">
+        <button type="button" (click)="agregarPermiso()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Agregar Permiso</button>
+      </div>
+    </form>
+
+    <!-- Lista de permisos -->
+    <div class="mb-4">
+      <h3 class="text-lg font-bold mb-2">Permisos asignados:</h3>
+      <table class="w-full text-left border border-gray-300 rounded overflow-hidden">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2">Vista</th>
+            <th class="px-4 py-2">Ver</th>
+            <th class="px-4 py-2">Insertar</th>
+            <th class="px-4 py-2">Editar</th>
+            <th class="px-4 py-2">Eliminar</th>
+            <th class="px-4 py-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let permiso of permisosList; trackBy: trackByPermiso">
+            <td class="px-4 py-2">{{ permiso.vista }}</td>
+            <td class="px-4 py-2 text-center">{{ permiso.ver ? '✔' : '❌' }}</td>
+            <td class="px-4 py-2 text-center">{{ permiso.insertar ? '✔' : '❌' }}</td>
+            <td class="px-4 py-2 text-center">{{ permiso.editar ? '✔' : '❌' }}</td>
+            <td class="px-4 py-2 text-center">{{ permiso.eliminar ? '✔' : '❌' }}</td>
+            <td class="px-4 py-2 space-x-1">
+              <button class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600" (click)="editarPermiso(permiso)">Editar</button>
+              <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" (click)="eliminarPermiso(permiso)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-end space-x-4 mt-4">
+      <button (click)="cerrarModalPermisos()" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded">Cerrar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Tabla de Roles -->
 <div class="flex justify-center mt-4">
@@ -62,6 +120,9 @@
                             class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Editar</button>
                         <button (click)="eliminarRol(rol.id_rol!)"
                             class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Eliminar</button>
+                        <button (click)="abrirModalPermisos(rol)"
+                        class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition">Permisos</button>
+
                     </td>
                 </tr>
             </tbody>
