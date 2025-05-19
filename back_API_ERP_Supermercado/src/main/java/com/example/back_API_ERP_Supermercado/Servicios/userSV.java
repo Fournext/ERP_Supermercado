@@ -2,6 +2,7 @@ package com.example.back_API_ERP_Supermercado.Servicios;
 
 import com.example.back_API_ERP_Supermercado.Entidad.userET;
 import com.example.back_API_ERP_Supermercado.Repositorio.userRP;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class userSV {
 
     public String obtenerRolPorUsername(String username) {
         return userRP.obtenerRolDeUsuario(username);
+    }
+
+    public userET registrarUsuario(userET user){
+        return this.userRP.save(user);
     }
 
 }

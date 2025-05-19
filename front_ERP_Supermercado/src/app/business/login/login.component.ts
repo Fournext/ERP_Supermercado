@@ -35,7 +35,7 @@ export default class LoginComponent {
       username: this.username,
       password: this.password
     };
-  
+
     this._userservices.verifRol(this.username).subscribe({
       next: (rolData) => {
         this.rol = rolData.rol;
@@ -44,7 +44,7 @@ export default class LoginComponent {
             const token = response.token;
             if (token) {
               localStorage.setItem('token', token);
-  
+
               if (this.rol === 'personal') {
                 this._bitacoraservices.ActualizarBitacora("Inicio de Sesion");
                 this.toastr.success("¡Bienvenido!", "Éxito");
@@ -55,7 +55,7 @@ export default class LoginComponent {
               } else {
                 this.toastr.error("El Usuario no tiene un rol", "Error");
               }
-  
+
             } else {
               this.toastr.error("No se recibió el token", "Error");
             }
@@ -73,5 +73,5 @@ export default class LoginComponent {
         this.toastr.error("No se pudo verificar el rol del usuario", "Error");
       }
     });
-  }  
+  }
 }

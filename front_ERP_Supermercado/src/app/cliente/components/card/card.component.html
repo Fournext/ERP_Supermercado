@@ -12,7 +12,9 @@
           </p>
 
           <div class="mt-4 flex space-x-2">
-            <button class="flex-1 bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition">
+            <button
+            (click)="agregarCarrito(producto,producto.imagenUrl)"
+            class="flex-1 bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition">
               Añadir al Carrito
             </button>
           </div>

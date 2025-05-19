@@ -12,7 +12,17 @@ export const routes: Routes = [
   },
   {
     path: 'ecommerce',
-    component: InicioComponent
+    component: InicioComponent,
+    children: [
+      {
+        path: 'carrito',
+        loadComponent: () => import('./cliente/carrito/carrito.component').then(m => m.CarritoComponent)
+      },
+      {
+        path: 'cliente',
+        loadComponent: () => import('./cliente/cliente/cliente.component').then(m => m.ClienteComponent)
+      }
+    ]
   },
 
   //parte de del dashboard
@@ -46,47 +56,47 @@ export const routes: Routes = [
         loadComponent: () => import('./business/marcas/marcas.component')
       },
       {
-        path:'categorias',
-        loadComponent:()=>import('./business/categoria/categoria.component')
+        path: 'categorias',
+        loadComponent: () => import('./business/categoria/categoria.component')
       },
       {
-        path:'bitacora',
-        loadComponent:()=>import('./business/bitacora/bitacora.component')
+        path: 'bitacora',
+        loadComponent: () => import('./business/bitacora/bitacora.component')
       },
       {
-        path:'roles',
-        loadComponent:()=>import('./business/rol-y-permisos/rol-y-permisos.component')
+        path: 'roles',
+        loadComponent: () => import('./business/rol-y-permisos/rol-y-permisos.component')
       },
       {
-        path:'turno',
-        loadComponent:()=>import('./business/turno/turno.component')
+        path: 'turno',
+        loadComponent: () => import('./business/turno/turno.component')
       },
       {
-        path:'almacen',
-        loadComponent:()=>import('./business/almacen/almacen.component')
+        path: 'almacen',
+        loadComponent: () => import('./business/almacen/almacen.component')
       },
       {
-        path:'sector',
-        loadComponent:()=>import('./business/sector/sector.component')
+        path: 'sector',
+        loadComponent: () => import('./business/sector/sector.component')
       },
       {
-        path:'repisa',
-        loadComponent:()=>import('./business/repisa/repisa.component')
+        path: 'repisa',
+        loadComponent: () => import('./business/repisa/repisa.component')
       },
       {
-        path:'boleta_salida',
-        loadComponent:()=>import('./business/boleta-salida/boleta-salida.component')
+        path: 'boleta_salida',
+        loadComponent: () => import('./business/boleta-salida/boleta-salida.component')
       },
       {
-        path:'proveedor',
-        loadComponent:()=>import('./business/proveedores/proveedores.component')
+        path: 'proveedor',
+        loadComponent: () => import('./business/proveedores/proveedores.component')
       },
       {
-        path:'compras',
-        loadComponent:()=>import('./business/compras-page/compras-page.component')
-      },{
-        path:'boleta_entrada',
-        loadComponent:()=>import('./business/boleta-entrada/boleta-entrada.component')
+        path: 'compras',
+        loadComponent: () => import('./business/compras-page/compras-page.component')
+      }, {
+        path: 'boleta_entrada',
+        loadComponent: () => import('./business/boleta-entrada/boleta-entrada.component')
       },
       {
         path: '',
