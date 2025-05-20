@@ -23,5 +23,8 @@ public class userSV {
     public String obtenerRolPorUsername(String username) {
         return userRP.obtenerRolDeUsuario(username);
     }
+    public userET registrarUsuario(userET user){
+        return this.userRP.save(user);
+    }
 
 }

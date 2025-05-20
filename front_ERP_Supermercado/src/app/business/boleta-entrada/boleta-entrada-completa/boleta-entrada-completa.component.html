@@ -1,0 +1,44 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-6 relative">
+  <!-- Encabezado de la boleta -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <h2 class="text-2xl font-bold">BOLETA DE ENTRADA</h2>
+      <p class="text-sm text-gray-500">ID: {{boletaEntradaService.boletaActual().idBoleta}}</p>
+      <p class="text-sm text-gray-500">Fecha: {{boletaEntradaService.boletaActual().fecha}} </p>
+      <p class="text-sm text-gray-500">Estado: {{boletaEntradaService.boletaActual().estado}}</p>
+      <p class="text-sm text-gray-600">Personal: {{buscarPersonal(boletaEntradaService.boletaActual().idPersonal)}} </p>
+      <p class="text-sm text-gray-600">Boleta de compra: {{boletaEntradaService.boletaActual().idBoletaCompra}} </p>
+      <p>
+        <button
+        (click)="boletaEntradaService.mostrarModalSwitch()"
+        class="absolute top-2 right-3 bg-red-500 px-2 rounded-[5px]">X</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Tabla de detalles -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-2">ID</th>
+          <th class="px-4 py-2">CANTIDAD COMPRADA</th>
+          <th class="px-4 py-2">CANTIDAD ACEPTADA</th>
+          <th class="px-4 py-2">COSTO UNITARIO</th>
+          <th class="px-4 py-2">LOTE</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        @for (detalle of detalleBoletaEntrada.listaDetallesBoletaEntradaActual(); track detalle.idBoleta) {
+          <tr>
+          <td class="px-4 py-2">{{detalle.idBoleta}}</td>
+          <td class="px-4 py-2">{{detalle.cantidadComprada}}</td>
+          <td class="px-4 py-2">{{detalle.cantidad}}</td>
+          <td class="px-4 py-2">Bs.{{detalle.costoUnitario}} </td>
+          <td class="px-4 py-2">{{detalle.idLote}}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

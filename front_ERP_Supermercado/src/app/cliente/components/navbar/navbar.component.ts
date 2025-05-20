@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../../../services/categoria.service';
 import { RouterLink } from '@angular/router';
 import { Categoria } from '../../../../interface/categoria.interface';
+import { AuthService } from '../../../../services/auth-service.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,8 +28,13 @@ export class NavbarComponent implements OnInit {
   }
 
   private categoriaService = inject(CategoriaService);
+  public authService=inject(AuthService);
   public listaCategorias = computed(() => this.categoriaService.listaCategorias());
   public filtroBusqueda = signal<string>('');
+
+
+  //xD
+
 
   public categoriasFiltradas = computed(() => {
     return this.listaCategorias().filter((categoria) =>
@@ -46,7 +52,7 @@ export class NavbarComponent implements OnInit {
   }
 
   @Output() filtrar = new EventEmitter<any>();
-  
+
   @Output() borrarFiltro = new EventEmitter<void>();
   borrarFiltros() {
     this.borrarFiltro.emit();

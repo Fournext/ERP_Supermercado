@@ -3,6 +3,8 @@ package com.example.back_API_ERP_Supermercado.Controlador;
 import com.example.back_API_ERP_Supermercado.Entidad.userET;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.back_API_ERP_Supermercado.Servicios.userSV;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,15 @@ public class userCtr {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Error al obtener el rol: " + e.getMessage());
             return ResponseEntity.badRequest().body(error);
+        }
+    }
+    @PostMapping("/registrar")
+    public ResponseEntity<?> registrarUsuario(@RequestBody userET user){
+        try {
+            userET usuario = userSV.registrarUsuario(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

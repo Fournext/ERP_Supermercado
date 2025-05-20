@@ -1,8 +1,8 @@
-// auth.service.ts
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,14 @@ import { ToastrService } from 'ngx-toastr';
 export class AuthService {
   private tokenCheckInterval = 60000; // 1 minuto
 
-  constructor(private router: Router, private toastr: ToastrService) {
-    this.startTokenWatch();
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.startTokenWatch(); // Solo se activa en el navegador
+    }
   }
 
   private startTokenWatch(): void {
@@ -21,15 +27,17 @@ export class AuthService {
   }
 
   checkToken(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token) as { exp: number };
-        if (decoded.exp * 1000 < Date.now()) {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const decoded = jwtDecode(token) as { exp: number };
+          if (decoded.exp * 1000 < Date.now()) {
+            this.handleExpiredToken();
+          }
+        } catch (e) {
           this.handleExpiredToken();
         }
-      } catch (e) {
-        this.handleExpiredToken();
       }
     }
   }

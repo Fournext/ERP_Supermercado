@@ -39,6 +39,14 @@ public class BoletaCompraService {
             throw new RuntimeException("Boleta de compra no encontrada");
         }
     }
+    public BoletaCompra obtenerBoleta(Integer id){
+        Optional<BoletaCompra> boletaExistente=this.boletaCompraRepositorio.findById(id);
+        if(boletaExistente.isPresent()){
+            return boletaExistente.get();
+        }else{
+            throw new RuntimeException("Boleta de compra no encontrada");
+        }
+    }
 
 
 

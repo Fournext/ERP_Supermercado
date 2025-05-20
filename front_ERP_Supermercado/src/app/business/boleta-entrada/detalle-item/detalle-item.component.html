@@ -1,0 +1,32 @@
+<div class="grid grid-cols-6 gap-4 bg-gray-100 p-2 rounded-md items-center text-sm">
+  <div>
+    <input [value]="detalle().idProducto" type="text" placeholder="Producto" readonly>
+  </div>
+
+  <div>
+    <input [value]="detalle().cantidadComprada" type="text" placeholder="Cantidad" readonly>
+  </div>
+
+  <div>
+    <input [value]="detalle().cantidad" (input)="cantidadAceptada.set(+txtCantidad.value)" #txtCantidad type="number"
+      placeholder="Cantidad">
+  </div>
+
+  <div>
+    <input [value]="detalle().costoUnitario" type="text" placeholder="Costo" readonly>
+  </div>
+  <div>
+    <button
+      class="bg-yellow-500 w-full px-2 py-1 rounded flex justify-center text-white hover:bg-amber-300 hover:scale-[1.05]"
+      (click)="editarDetalleBoletaEntrada()">EDITAR</button>
+  </div>
+
+  <div class="w-full px-2 py-1 border border-gray-300 rounded flex justify-center">
+    <select (change)="asignarLote($event)" class="text-center">
+      <option value="">Elegir un lote</option>
+      @for (lote of listaLotes(); track lote.id_lote) {
+      <option value="{{lote.id_lote}}">{{lote.id_lote}} : {{lote.descripcion_producto}}</option>
+      }
+    </select>
+  </div>
+</div>
