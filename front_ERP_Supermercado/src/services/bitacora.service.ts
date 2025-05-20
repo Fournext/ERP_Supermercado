@@ -28,7 +28,6 @@ export class BitacoraService {
 
 
   private newBitacora(bitacora: Bitacora):Observable<void>{
-    console.log(bitacora);
     return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}/cargar`,bitacora);
   }
 

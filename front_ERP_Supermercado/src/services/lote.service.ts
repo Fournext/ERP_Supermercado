@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../environments/environment.development';
 import { Lote } from '../interface/lote';
@@ -20,6 +20,8 @@ export class LoteService {
     this.myAppUrl = environment.endpoint;
     this.myApiUrl = 'lote';
   }
+  //datos
+  listaLotes=signal<Lote[]>([]);//lo necesito para no estar haciendo peticiones a lo loco
 
 
   newLote(lote: Lote):Observable<void>{

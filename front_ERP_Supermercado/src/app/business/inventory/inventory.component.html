@@ -1,10 +1,142 @@
 <div class="container mx-auto p-6 bg-gray-100 min-h-screen">
     <h1 class="text-2xl font-bold text-gray-700 mb-4">Gestión de Lotes de Inventario</h1>
 
-    <!-- Botón para mostrar el formulario -->
-    <button class="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition" (click)="toggleForm()">
-        {{ showForm ? 'Cerrar Formulario' : 'Agregar Lote' }}
-    </button>
+    <!-- Botón para mostrar el formulario y reporte -->
+    <div class="flex items-center gap-4 mb-4">
+        <!-- Botón "Agregar Lote" con color verde -->
+        <button class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition" (click)="toggleForm()">
+            {{ showForm ? 'Cerrar Formulario' : 'Agregar Lote' }}
+        </button>
+
+        <!-- Botón "Generar Reporte" sin cambios -->
+        <button (click)="mostrarModalInventario()"
+            class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+            Generar Reporte
+        </button>
+    </div>
+
+    <!--Modal de Selección de Columnas -->
+    <div *ngIf="modalInventario()" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[9999] p-4">
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-[1150px] max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Generar Reporte de Inventario</h2>
+
+            <!--Selección de columnas con diseño adaptable -->
+            <label class="block text-gray-700 font-medium mb-2">📋 Selecciona Columnas:</label>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+                <label *ngFor="let col of columnasDisponibles()" class="flex items-center gap-2">
+                    <input type="checkbox" [(ngModel)]="col.seleccionado" class="w-4 h-4">
+                    <span class="text-gray-700">{{ col.nombre }}</span>
+                </label>
+            </div>
+
+            <!--Filtros para el reporte -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start mb-6">
+                <!-- Filtrar por Almacén -->
+                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                    <label class="block text-gray-700 font-medium mb-2">📦 Almacén:</label>
+                    <select [(ngModel)]="almacenSeleccionado" (change)="actualizarFiltros()"
+                        class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todos</option>
+                        <option *ngFor="let almacen of Almacenes" [value]="almacen.codigo">
+                            {{ almacen.codigo }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Filtrar por Repisa -->
+                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                    <label class="block text-gray-700 font-medium mb-2">📂 Repisa:</label>
+                    <select [(ngModel)]="repisaSeleccionada" (change)="actualizarFiltros()"
+                        class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todas</option>
+                        <option *ngFor="let repisa of Repisas" [value]="repisa.codigo">
+                            {{ repisa.codigo }}
+                        </option>
+                    </select>
+                </div>
+
+                <!--Filtrar por Rango de Fecha de Caducidad -->
+                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                    <label class="block text-gray-700 font-medium mb-2">📅 Rango de Fecha de Caducidad:</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="date" [(ngModel)]="fechaInicio" (change)="actualizarFiltros()"
+                            class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="date" [(ngModel)]="fechaFin" (change)="actualizarFiltros()"
+                            class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!--Filtrar por Stock -->
+                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                    <label class="block text-gray-700 font-medium mb-2">📊 Filtrar por Stock:</label>
+                    <select [(ngModel)]="stockSeleccionado" (change)="actualizarFiltros()"
+                        class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todos</option>
+                        <option value="critico">⚠ Stock Crítico</option>
+                        <option value="suficiente">✅ Stock Suficiente</option>
+                    </select>
+                </div>
+
+                <!--Filtrar por Estado -->
+                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                    <label class="block text-gray-700 font-medium mb-2">🔎 Filtrar por Estado:</label>
+                    <select [(ngModel)]="estadoSeleccionado" (change)="actualizarFiltros()"
+                        class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todos</option>
+                        <option value="activo">✅ Activo</option>
+                        <option value="caducado">⚠ Caducado</option>
+                        <option value="agotado">🚫 Agotado</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- formato de exportación -->
+            <label class="block text-gray-700 font-medium">Formato de Exportación:</label>
+            <select [(ngModel)]="formatoSeleccionado" class="w-full px-3 py-2 border rounded shadow">
+                <option value="pdf">PDF</option>
+                <option value="excel">Excel</option>
+                <option value="html">HTML</option>
+            </select>
+
+            <!-- Vista previa del reporte -->
+            <h3 class="text-lg font-bold mb-4 text-gray-800">Vista Previa del Reporte</h3>
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg max-h-[300px] overflow-y-auto mb-4">
+                <table class="w-full border border-gray-300 text-sm">
+                    <thead class="bg-gray-700 text-white uppercase">
+                        <tr *ngIf="columnasSeleccionadas().length > 0">
+                            <th *ngFor="let col of columnasSeleccionadas()"
+                                class="py-1 px-4 border-b border-gray-400 text-left">
+                                {{ col.nombre }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of lotesFiltrados()">
+                            <td *ngFor="let col of columnasSeleccionadas()" class="py-2 px-4 border-b border-gray-300">
+                                {{ obtenerValor(row, col.clave) }}
+                            </td>
+                        </tr>
+                    </tbody>
+
+
+                </table>
+            </div>
+
+
+            <!--Botones de acción -->
+            <div class="flex justify-center gap-4 mt-6">
+                <button (click)="generarReporte()"
+                    class="bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition">
+                    📥 Descargar Reporte
+                </button>
+                <button (click)="cerrarModalInventario()"
+                    class="bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Formulario para agregar/editar lotes -->
     <div *ngIf="showForm" class="bg-white p-6 shadow-md rounded-lg mb-6">
@@ -14,11 +146,11 @@
                 <div>
                     <label class="block text-gray-700 font-medium">Producto:</label>
                     <select [(ngModel)]="newLote.descripcion_producto" name="producto"
-                    class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
-                    <option value="" disabled selected>Selecciona un producto</option>
-                    <option *ngFor="let product of listaProductos()" [value]="product.descripcion">
-                        {{ product.descripcion }}
-                    </option>
+                        class="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-300">
+                        <option value="" disabled selected>Selecciona un producto</option>
+                        <option *ngFor="let product of listaProductos()" [value]="product.descripcion">
+                            {{ product.descripcion }}
+                        </option>
                     </select>
                 </div>
 
@@ -128,16 +260,27 @@
                 }">{{ lote.nombre_estado }}</span>
                     </td>
                     <td class="py-3 px-4 border-b text-center">
-                        <button
-                            class="bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-green-600 transition inline-block"
-                            (click)="editLote(lote.id_lote!)">
-                            Editar
-                        </button>
-                        <button
-                            class="bg-red-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-red-600 transition inline-block"
-                            (click)="deleteLote(lote)">
-                            Eliminar
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <!-- Botón de editar -->
+                            <button (click)="editLote(lote.id_lote!)"
+                                class="bg-yellow-400 hover:scale-110 transition-transform duration-200 p-2 rounded-md cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6 text-black">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                            </button>
+
+                            <!-- Botón de eliminar -->
+                            <button (click)="deleteLote(lote)"
+                                class="bg-red-400 hover:scale-110 transition-transform duration-200 p-2 rounded-md cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                </svg>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>

@@ -13,13 +13,13 @@
 
   <!-- Menú de Navegación -->
   <div class="flex items-center space-x-6">
-    <button (click)="borrarFiltros()" class="text-gray-700 hover:text-green-600">
+    <button (click)="borrarFiltros()" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">
       Productos
     </button>
 
     <!-- Categoría desplegable -->
     <div class="relative">
-      <button (click)="toggleCategoria()" class="text-gray-700 hover:text-green-600">
+      <button (click)="toggleCategoria()" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">
         Categoría ▼
       </button>
       <div *ngIf="mostrarCategoria" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
@@ -28,22 +28,13 @@
       </div>
     </div>
 
-    <!-- Marca desplegable -->
-    <div class="relative">
-      <button (click)="toggleMarca()" class="text-gray-700 hover:text-green-600">
-        Marca ▼
-      </button>
-      <div *ngIf="mostrarMarca" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
-        <a routerLink="/marca/nike" class="block px-4 py-2 hover:bg-gray-100">Nike</a>
-        <a routerLink="/marca/adidas" class="block px-4 py-2 hover:bg-gray-100">Adidas</a>
-        <a routerLink="/marca/samsung" class="block px-4 py-2 hover:bg-gray-100">Samsung</a>
-      </div>
-    </div>
+    <a [routerLink]="['/ecommerce/carrito']" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">Carrito</a>
 
-    <a routerLink="/carrito" class="text-gray-700 hover:text-green-600">Carrito</a>
+    <a [routerLink]="['/ecommerce/cliente']" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">Cliente</a>
 
-    <a routerLink="/login" class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition">
-      Iniciar Sesión
+    <a routerLink="/login" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition hover:scale-[1.05]">
+      Cerrar Sesión
     </a>
+
   </div>
 </nav>

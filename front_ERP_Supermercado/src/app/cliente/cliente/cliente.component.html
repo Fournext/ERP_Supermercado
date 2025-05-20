@@ -1,0 +1,51 @@
+<!-- Modal background -->
+<div class="fixed inset-0 bg-[#151212A6] flex justify-center items-center z-50" id="clienteModal">
+  <!-- Modal content -->
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-xl">
+    <h2 class="text-2xl font-bold mb-4 text-center">Registrar Cliente</h2>
+
+    <form id="formCliente" class="space-y-4">
+      <!-- Nombre -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input [value]="nombre()" (click)="nombre.set(txtnombre.value)" #txtnombre type="text" name="nombre_cliente"
+          class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- Apellido -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Apellido</label>
+        <input [value]="apellido()" (click)="apellido.set(txtapellido.value)" #txtapellido type="text"
+          name="apellido_cliente" class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- Carnet -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Carnet</label>
+        <input [value]="carnet()" (click)="carnet.set(txtcarnet.value)" #txtcarnet type="text" name="carnet_cliente"
+          maxlength="10" class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- NIT -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">NIT</label>
+        <input [value]="nit()" (click)="nit.set(txtnit.value)" #txtnit type="text" name="nit_cliente" maxlength="30"
+          class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Dirección -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Dirección</label>
+        <input [value]="direccion()" (click)="direccion.set(txtdireccion.value)" #txtdireccion type="text"
+          name="direccion_cliente" class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-4 mt-6">
+        <button type="button" (click)="volverHome()"
+          class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Cancelar</button>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

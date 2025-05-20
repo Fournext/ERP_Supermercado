@@ -12,7 +12,17 @@ export const routes: Routes = [
   },
   {
     path: 'ecommerce',
-    component: InicioComponent
+    component: InicioComponent,
+    children: [
+      {
+        path: 'carrito',
+        loadComponent: () => import('./cliente/carrito/carrito.component').then(m => m.CarritoComponent)
+      },
+      {
+        path: 'cliente',
+        loadComponent: () => import('./cliente/cliente/cliente.component').then(m => m.ClienteComponent)
+      }
+    ]
   },
 
   //parte de del dashboard
@@ -84,6 +94,14 @@ export const routes: Routes = [
       {
         path:'compras',
         loadComponent:()=>import('./business/compras-page/compras-page.component')
+      },
+      {
+        path: 'boleta_entrada',
+        loadComponent: () => import('./business/boleta-entrada/boleta-entrada.component')
+      },
+      {
+        path:'backup',
+        loadComponent:()=>import('./business/backup/backup.component')
       },
       {
         path: '',

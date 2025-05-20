@@ -85,6 +85,14 @@ export class ComprasService {
     )
   }
 
+  obtenerBoleta(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${this.complementoUrl}/obtener`, {
+      params: {
+        id: id
+      }
+    });
+  }
+  
   constructor() { }
 
 }

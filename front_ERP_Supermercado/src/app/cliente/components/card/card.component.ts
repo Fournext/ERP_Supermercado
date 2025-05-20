@@ -2,6 +2,9 @@ import { Component, computed, inject, Input, OnChanges, OnInit, signal } from '@
 import { ProductoConPrecio } from '../../../../interface/producto.interface';
 import { ProductoService } from '../../../../services/producto.service';
 import { ImagenService } from '../../../../services/imagen.service';
+import { CarritoService } from '../../../../services/carrito.service';
+import { DetalleCarritoService } from '../../../../services/detalle-carrito.service';
+import { DetalleCarrito } from '../../../../interface/carrito';
 
 @Component({
   selector: 'app-card',
@@ -14,6 +17,8 @@ export class CardComponent implements OnInit, OnChanges {
 
   private productoService = inject(ProductoService);
   private imagenService = inject(ImagenService);
+  private carritoService = inject(CarritoService);
+  private detalleCarrito = inject(DetalleCarritoService);
 
   public productos = computed(() => this.productoService.listaProductos());
   public imagenes = computed(() => this.imagenService.listaImagenes());
@@ -24,10 +29,7 @@ export class CardComponent implements OnInit, OnChanges {
   public filtroCategoria = signal<string>('');
   public filtroCodigo = signal<string>('');
 
-  ngOnInit() {
-    this.productoService.obtenerProductos();
-    this.imagenService.obtenerTodasLasImagenes();
-  }
+
 
   // En el componente TypeScript
   public listaProductosConImagen = computed(() => {
@@ -71,5 +73,23 @@ export class CardComponent implements OnInit, OnChanges {
 
   }
 
+  public agregarCarrito(producto: ProductoConPrecio, url: string) {
+    const detalleC: DetalleCarrito = {
+      cantidad: 1,
+      precio: producto.precio,
+      subtotal: producto.precio,
+      idProducto: producto.idProducto,
+      url: url,
+      descripcion: producto.descripcion
+    }
+    this.carritoService.total.set( this.carritoService.total()+producto.precio);
+    this.detalleCarrito.listaDetalleCarritoActual.update((currentArray) => [...currentArray,detalleC]);
+  }
+
+
+  ngOnInit() {
+    this.productoService.obtenerProductos();
+    this.imagenService.obtenerTodasLasImagenes();
+  }
   @Input() borrarFiltro: boolean = false;
 }

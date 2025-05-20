@@ -4,15 +4,119 @@
   <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center mb-6">
     <input type="text" placeholder="Nombre del producto" [(ngModel)]="filtroNombre" name="nombreProducto"
       class="border px-3 py-2 rounded shadow col-span-1 md:col-span-1">
-    <input type="text" placeholder="Categoría" [(ngModel)]="filtroCategoria" name="categoria"
-      class="border px-3 py-2 rounded shadow col-span-1 md:col-span-1">
+
+    <div class="col-span-1 md:col-span-1">
+      <select [(ngModel)]="categoriaSeleccionada" class="w-full px-3 py-2 border rounded shadow">
+        <option value="">Categoria</option>
+        <option *ngFor="let categoria of listaCategorias()" [value]="categoria.nombre">
+          {{ categoria.nombre }}
+        </option>
+      </select>
+    </div>
+
     <input type="text" placeholder="Código" [(ngModel)]="filtroCodigo" name="codigo"
       class="border px-3 py-2 rounded shadow col-span-1 md:col-span-1">
 
     <button (click)="mostrarFormulario()"
       class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow col-span-1 md:col-span-1">
-      Registrar
+      Registrar Producto
     </button>
+
+    <button (click)="mostrarModalReporte()"
+      class="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition">
+      Generar Reporte
+    </button>
+  </div>
+
+  <div *ngIf="modalReporte()" class="fixed inset-0 bg-black/60 flex items-center justify-center z-[9999] p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-[1150px] max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-bold text-gray-700 mb-4">Generar Reporte</h2>
+      <label class="block text-gray-700 font-medium mb-2">📋 Selecciona Columnas:</label>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+        <label *ngFor="let col of columnasDisponibles()" class="flex items-center gap-2">
+          <input type="checkbox" [checked]="col.seleccionado" (change)="actualizarColumnasSeleccionadas(col)"
+            class="w-4 h-4">
+          <span class="text-gray-700">{{ col.nombre }}</span>
+        </label>
+      </div>
+
+      <!--Filtros para el reporte -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start mb-6">
+        <!--Filtrar por Categoría -->
+        <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+          <label class="block text-gray-700 font-medium mb-2">📦 Categoría:</label>
+          <select [(ngModel)]="categoriaSeleccionada"
+            class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas</option>
+            <option *ngFor="let categoria of listaCategorias()" [value]="categoria.nombre">
+              {{ categoria.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!--Filtrar por Marca -->
+        <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+          <label class="block text-gray-700 font-medium mb-2">🏷️ Marca:</label>
+          <select [(ngModel)]="marcaSeleccionada"
+            class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas</option>
+            <option *ngFor="let marca of listaMarcas()" [value]="marca.nombre">
+              {{ marca.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!--Filtrar por Tipo de Producto -->
+        <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+          <label class="block text-gray-700 font-medium mb-2">📂 Tipo de Producto:</label>
+          <select [(ngModel)]="tipoProductoSeleccionado"
+            class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todos</option>
+            <option value="Perecedero">Perecedero</option>
+            <option value="No perecedero">No Perecedero</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="block text-gray-700 font-medium">Formato de Exportación:</label>
+      <select [(ngModel)]="formatoSeleccionado" class="w-full px-3 py-2 border rounded shadow">
+        <option value="pdf">PDF</option>
+        <option value="excel">Excel</option>
+        <option value="html">HTML</option>
+      </select>
+
+      <h3 class="text-lg font-bold mb-4 text-gray-800">Vista Previa del Reporte</h3>
+      <div class="overflow-x-auto bg-white shadow-md rounded-lg max-h-[300px] overflow-y-auto mb-4">
+        <table class="w-full border border-gray-300 text-sm">
+          <thead class="bg-gray-700 text-white uppercase">
+            <tr *ngIf="columnasSeleccionadas().length > 0">
+              <th *ngFor="let col of columnasSeleccionadas()" class="py-1 px-4 border-b border-gray-400 text-left">
+                {{ col.nombre }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of obtenerDatosFiltrados(); trackBy: trackFilas">
+              <td *ngFor="let col of columnasSeleccionadas(); trackBy: trackColumnas"
+                class="py-2 px-4 border-b border-gray-300">
+                {{ row[col.clave] ?? 'Sin datos' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-center gap-4 mt-6">
+        <button (click)="generarReporte()"
+          class="bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition">
+          📥 Descargar Reporte
+        </button>
+        <button (click)="cerrarModalReporte()"
+          class="bg-red-500 text-white py-3 px-6 rounded-lg hover:bg-red-600 transition">
+          Cancelar
+        </button>
+      </div>
+    </div>
   </div>
 
   @if(switchFormularioCrear()){
@@ -30,25 +134,19 @@
     <form (submit)="registrarProducto($event)" class="space-y-3">
       <input [value]="codigo()" (input)="codigo.set(txtcodigo.value)" #txtcodigo type="text" placeholder="Código"
         name="codigo" class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <input [value]="descripcion()" (input)="descripcion.set(txtdescripcion.value)" #txtdescripcion type="text"
         placeholder="Descripción" name="descripcion"
         class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <input [value]="marca()" (input)="marca.set(txtmarca.value)" #txtmarca type="text" placeholder="Marca"
         name="marca" class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <input [value]="categoria()" (input)="categoria.set(txtcategoria.value)" #txtcategoria type="text"
         placeholder="Categoría" name="categoria"
         class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <input [value]="tipoProducto()" (input)="tipoProducto.set(txttipo.value)" #txttipo type="text"
         placeholder="Tipo de producto" name="tipo_producto"
         class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <input [value]="precio()" (input)="precio.set(txtprecio.value)" #txtprecio type="text" placeholder="Precio"
         name="precio" min="0" class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none" required>
-
       <button type="submit"
         class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow mt-4">
         Guardar
@@ -68,7 +166,6 @@
       </svg>
     </button>
     <h3 class="text-lg font-bold mb-4 text-gray-800">Actualizar Producto</h3>
-
     <form (submit)="actualizarProducto($event)" class="space-y-3">
       <label class="text-[12px]" for="Código">ID:</label>
       <input [value]="id_producto()" id="id" type="text" placeholder="id" readonly name="codigo"
@@ -95,7 +192,6 @@
       <input [value]="precioA()" (input)="precioA.set(txtprecio.value)" #txtprecio type="text" placeholder="Precio"
         name="precio" id="precio" min="0" class="w-full border px-3 py-2 rounded shadow text-sm focus:outline-none"
         required>
-
       <button type="submit"
         class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow mt-4">
         Guardar
@@ -110,10 +206,8 @@
     <div *ngFor="let productos of productosFiltrados(); trackBy: trackProductos"
       class="relative bg-cover bg-center bg-no-repeat rounded-xl shadow p-4 flex flex-col justify-between max-w-[250px] min-h-[250px] max-h-[300px] overflow-hidden hover:scale-[1.05]"
       [style.backgroundImage]="'url(' + productos.imagenUrl + ')'">
-
       <!-- Overlay oscuro con Tailwind -->
       <div class="absolute inset-0 bg-black/40 rounded-xl"></div>
-
       <!-- Contenido con z-index para aparecer sobre el overlay -->
       <div class="relative z-10 flex flex-col h-full">
         <div class="items-center w-full">
@@ -121,12 +215,10 @@
           <h4 class="text-center font-semibold text-lg mb-2 text-white [text-shadow:_0_1px_2px_rgb(0_0_0_/_80%)]">
             {{productos.codigo}}
           </h4>
-
           <!-- Descripción - Gris claro con transparencia -->
           <p class="text-center text-gray-100/90 text-sm mb-2 [text-shadow:_0_1px_2px_rgb(0_0_0_/_60%)]">
             {{productos.descripcion}}
           </p>
-
           <!-- Precio - Destacado con fondo semitransparente -->
           <p
             class="text-center mx-auto text-white font-bold mb-4 w-[50%] rounded-full bg-green-600/90 backdrop-blur-sm ">
@@ -161,6 +253,5 @@
       </div>
     </div>
   </div>
-  <!-- Formulario: ocupa 1 columna -->
 
 </section>

@@ -194,6 +194,18 @@
       </li>
 
       <li>
+        <button routerLink="/boleta_entrada"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          type="button">
+          <!-- Icono Dashboard -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9h4m-4 7h12m-12 4h12m-12 4h4m-6 5h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2"/><circle cx="22" cy="9" r=".5" fill="currentColor"/></g></svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Boleta De Entrada</p>
+        </button>
+      </li>
+      
+      <li>
         <button routerLink="/boleta_salida"
           routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
           (click)="ocultarSector()"
@@ -204,6 +216,20 @@
             <path d="M14 2H6a2 2 0 0 0-2 2v16a1 1 0 0 0 1.447.894L12 18l6.553 2.894A1 1 0 0 0 20 20V8l-6-6zm0 2.414L18.586 9H14a1 1 0 0 1-1-1V4.414zM8 10h8v2H8v-2zm0 4h5v2H8v-2z"/>
           </svg>          
           <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Boleta de Salida</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/backup"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          (click)="ocultarSector()"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          type="button" (click)="closeAllSubMenus()">
+          <!-- Ícono Backup -->
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5 text-inherit">
+            <path d="M12 2C6.477 2 2 4.239 2 7v10c0 2.761 4.477 5 10 5s10-2.239 10-5V7c0-2.761-4.477-5-10-5Zm0 2c4.971 0 8 1.798 8 3s-3.029 3-8 3-8-1.798-8-3 3.029-3 8-3Zm0 16c-4.971 0-8-1.798-8-3v-1.104c1.866 1.077 5.042 1.604 8 1.604s6.134-.527 8-1.604V17c0 1.202-3.029 3-8 3Zm0-5c-4.971 0-8-1.798-8-3V8.896C5.866 9.973 9.042 10.5 12 10.5s6.134-.527 8-1.604V12c0 1.202-3.029 3-8 3Zm4.707-6.707-3 3a1 1 0 0 1-1.414-1.414L13.586 9H9a1 1 0 0 1 0-2h4.586l-1.293-1.293A1 1 0 1 1 13.707 4.707l3 3a1 1 0 0 1 0 1.586Z"/>
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Backup</p>
         </button>
       </li>
 
@@ -408,6 +434,19 @@
             <path d="M14 2H6a2 2 0 0 0-2 2v16a1 1 0 0 0 1.447.894L12 18l6.553 2.894A1 1 0 0 0 20 20V8l-6-6zm0 2.414L18.586 9H14a1 1 0 0 1-1-1V4.414zM8 10h8v2H8v-2zm0 4h5v2H8v-2z"/>
           </svg>          
           <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Boleta de salida</p>
+        </button>
+      </li>
+
+      <!-- Backup -->
+       <li>
+        <button routerLink="/backup"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          (click)="closeMenu();ocultarSector()" (click)="closeAllSubMenus()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5 text-inherit">
+            <path d="M12 2C6.477 2 2 4.239 2 7v10c0 2.761 4.477 5 10 5s10-2.239 10-5V7c0-2.761-4.477-5-10-5Zm0 2c4.971 0 8 1.798 8 3s-3.029 3-8 3-8-1.798-8-3 3.029-3 8-3Zm0 16c-4.971 0-8-1.798-8-3v-1.104c1.866 1.077 5.042 1.604 8 1.604s6.134-.527 8-1.604V17c0 1.202-3.029 3-8 3Zm0-5c-4.971 0-8-1.798-8-3V8.896C5.866 9.973 9.042 10.5 12 10.5s6.134-.527 8-1.604V12c0 1.202-3.029 3-8 3Zm4.707-6.707-3 3a1 1 0 0 1-1.414-1.414L13.586 9H9a1 1 0 0 1 0-2h4.586l-1.293-1.293A1 1 0 1 1 13.707 4.707l3 3a1 1 0 0 1 0 1.586Z"/>
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Backup</p>
         </button>
       </li>
 
