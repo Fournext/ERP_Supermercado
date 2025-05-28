@@ -1,0 +1,88 @@
+<section class="fixed inset-0 bg-[#151212A6] flex justify-center items-center z-50 p-4">
+  <div class="w-full max-w-6xl bg-white rounded-xl shadow-md p-4 md:p-6 overflow-hidden">
+    <!-- Encabezado -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 relative">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">🧾 Lista de Facturas</h2>
+      <button
+        (click)="volver()"
+        class="bg-red-500 text-white px-4 py-1 rounded-[10px] hover:scale-[1.1] hover:bg-red-600 transition absolute top-1 right-2 md:relative">
+        X
+      </button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-auto max-h-[70vh]">
+      <table class="min-w-full table-auto text-sm sm:text-base text-left border border-gray-300 rounded-lg">
+        <thead class="bg-gray-100 text-gray-700 font-semibold">
+          <tr>
+            <th class="px-4 py-2">#</th>
+            <th class="px-4 py-2 whitespace-nowrap">Fecha</th>
+            <th class="px-4 py-2 whitespace-nowrap">Vencimiento</th>
+            <th class="px-4 py-2 whitespace-nowrap">Total</th>
+            <th class="px-4 py-2 whitespace-nowrap">Método Pago</th>
+            <th class="px-4 py-2 whitespace-nowrap">Cliente</th>
+            <th class="px-4 py-2 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (factura of listaFactura(); track factura.idFactura) {
+          <tr class="border-t hover:bg-gray-50">
+            <td class="px-4 py-2 font-medium text-gray-800">{{factura.idFactura}}</td>
+            <td class="px-4 py-2">{{factura.fecha}}</td>
+            <td class="px-4 py-2">{{factura.fechaVencimiento}}</td>
+            <td class="px-4 py-2 text-green-600 font-semibold">{{factura.total}}</td>
+            <td class="px-4 py-2">{{metodoPago().nombre}}</td>
+            <td class="px-4 py-2">
+              {{clienteActual().nombreCliente}} {{clienteActual().nombreApellido}}
+            </td>
+            <td class="px-4 py-2 text-center">
+              <button
+                (click)="exportar(factura, clienteActual())"
+                class="bg-orange-400 text-white px-3 py-1 rounded-[10px] hover:scale-[1.1] transition">
+                Imprimir
+              </button>
+              <button
+                (click)="abrirValoracion(factura)"
+                class="bg-blue-500 text-white px-3 py-1 rounded-[10px] hover:scale-[1.1] transition mt-1">
+                Valorar
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="mostrarValoracion" class="fixed inset-0 bg-[#151212A6] flex justify-center items-center z-50 p-4">
+  <div class="w-full max-w-4xl bg-white rounded-xl shadow-md p-4 md:p-6 overflow-hidden">
+    <!-- Encabezado -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2 relative">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">⭐ Valoración</h2>
+      <button (click)="cerrarValoracion()" class="bg-red-500 text-white px-4 py-1 rounded-[10px] hover:scale-[1.1] hover:bg-red-600 transition absolute top-1 right-2 md:relative">X</button>
+    </div>
+
+    <!-- Estrellas -->
+    <div class="flex justify-center mb-4">
+      <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <svg (click)="setRating(star)" [ngClass]="{'text-yellow-400': star <= rating, 'text-gray-400': star > rating}" xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.384 2.46a1 1 0 00-.364 1.118l1.287 3.965c.3.921-.755 1.688-1.54 1.118L10 13.347l-3.384 2.46c-.785.57-1.84-.197-1.54-1.118l1.287-3.965a1 1 0 00-.364-1.118L2.615 9.393c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.966z" />
+        </svg>
+      </ng-container>
+    </div>
+
+    <!-- Campo de descripción -->
+    <div class="mb-4">
+      <label class="block mb-1 font-semibold">Descripción:</label>
+      <textarea [(ngModel)]="descripcionValoracion" class="border rounded w-full p-2" rows="4" placeholder="Describe tu experiencia..."></textarea>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-between">
+      <button (click)="cerrarValoracion()" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 transition">Cancelar</button>
+      <button (click)="guardarValoracion()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Guardar</button>
+    </div>
+  </div>
+</section>
+  

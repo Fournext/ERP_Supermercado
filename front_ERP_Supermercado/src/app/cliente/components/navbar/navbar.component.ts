@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, inject, OnInit, Output, output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, HostListener, inject, OnInit, Output, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoriaService } from '../../../../services/categoria.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Categoria } from '../../../../interface/categoria.interface';
 import { AuthService } from '../../../../services/auth-service.service';
+import { UserService } from '../../../../services/user.service';
+import { CarritoService } from '../../../../services/carrito.service';
+import { DetalleCarritoService } from '../../../../services/detalle-carrito.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,9 +16,20 @@ import { AuthService } from '../../../../services/auth-service.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
+  private router = inject(Router);
+  private categoriaService = inject(CategoriaService);
+  userService = inject(UserService);
+  private carritoService = inject(CarritoService);
+  private detalleCarritoService = inject(DetalleCarritoService);
+
 
   mostrarCategoria = false;
   mostrarMarca = false;
+
+  listaCategorias = computed(() => this.categoriaService.listaCategorias());
+  filtroBusqueda = signal<string>('');
+
+
 
   toggleCategoria() {
     this.mostrarCategoria = !this.mostrarCategoria;
@@ -26,15 +40,6 @@ export class NavbarComponent implements OnInit {
     this.mostrarMarca = !this.mostrarMarca;
     this.mostrarCategoria = false; // cerrar otro si estaba abierto
   }
-
-  private categoriaService = inject(CategoriaService);
-  public authService=inject(AuthService);
-  public listaCategorias = computed(() => this.categoriaService.listaCategorias());
-  public filtroBusqueda = signal<string>('');
-
-
-  //xD
-
 
   public categoriasFiltradas = computed(() => {
     return this.listaCategorias().filter((categoria) =>
@@ -57,4 +62,35 @@ export class NavbarComponent implements OnInit {
   borrarFiltros() {
     this.borrarFiltro.emit();
   }
+
+  cuentaAcciones(event: Event) {
+    const valor = (event.target as HTMLSelectElement).value;
+    if (valor == "datos") {
+      this.router.navigate(["/ecommerce/cliente"]);
+    } else {
+      this.router.navigate(["/ecommerce/factura"]);
+    }
+  }
+
+  inicioDeSesionTipo(event: Event) {
+    const valor = (event.target as HTMLSelectElement).value;
+    if (valor == 'cliente') {
+      this.router.navigate(['/login-cliente']);
+    } else {
+      this.router.navigate(['/login'])
+    }
+  }
+
+  cerrarSesion() {
+    localStorage.removeItem('token');
+    this.userService.usuarioActual.set({
+      id: 0,
+      username: '',
+      email: '',
+      password: ''
+    });
+    this.router.navigate(['/ecommerce']);
+    window.location.reload();
+  }
+
 }

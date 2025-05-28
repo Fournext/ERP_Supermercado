@@ -1,0 +1,31 @@
+<section class="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+  <div class="w-full max-w-md p-6 bg-white shadow-2xl rounded-lg relative">
+
+    <!-- Botón cerrar -->
+    <button
+      aria-label="Cerrar"
+      class="absolute top-2 right-2 text-white bg-red-500 rounded-[10px] w-7 h-7 flex items-center justify-center hover:bg-red-600"
+      (click)="ocultarModal()">×
+    </button>
+
+    <!-- Título -->
+    <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">Formulario de pago</h2>
+
+    <!-- Campo tarjeta -->
+    <div
+      id="card-element"
+      class="min-h-[56px] border border-gray-300 rounded-md p-3 mb-6 bg-white">
+    </div>
+
+    <!-- Botón pagar -->
+    <button
+      [disabled]="!cardListo() || cargando()"
+      (click)="pagar()"
+      class="w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+      {{ cargando() ? 'Procesando...' : ('Pagar $' + total().toFixed(2)) }}
+    </button>
+
+    <!-- Mensaje de resultado -->
+    <p *ngIf="mensaje" class="mt-4 text-center text-red-600">{{ mensaje }}</p>
+  </div>
+</section>

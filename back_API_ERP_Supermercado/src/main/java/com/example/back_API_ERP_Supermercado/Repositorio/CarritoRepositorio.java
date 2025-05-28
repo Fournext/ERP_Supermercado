@@ -11,4 +11,7 @@ public interface CarritoRepositorio extends JpaRepository<Carrito,Integer> {
 
     @Query(value="SELECT * FROM obtener_carrito_cliente(:idCliente)",nativeQuery = true)
     Carrito obtenerCarritoPorCliente(@Param("idCliente")Integer idCliente);
+
+    @Query(value="SELECT existe_carrito_por_cliente(:idCliente)",nativeQuery = true)
+    boolean existeCarritoCliente(@Param("idCliente")Integer idCliente);
 }

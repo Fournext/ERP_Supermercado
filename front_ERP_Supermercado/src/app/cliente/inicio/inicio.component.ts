@@ -7,6 +7,7 @@ import { RouterOutlet } from '@angular/router';
 import { BitacoraService } from '../../../services/bitacora.service';
 import { LoginService } from '../../../services/login.service';
 import { User } from '../../../interface/user';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-inicio',
@@ -15,10 +16,15 @@ import { User } from '../../../interface/user';
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent {
+  private userService=inject(UserService);
 
   produc: ProductoConPrecio[] = [];
 
   id_categoria?: string;
+
+  existeUsuario():boolean{
+    return this.userService.existeUsuario();
+  }
 
   filtroCategorias(data: any){
     this.borrar = false;
@@ -29,6 +35,11 @@ export class InicioComponent {
   borrar : boolean = false;
   borrarFiltro(){
     this.borrar = true;
+  }
+
+
+  ngOnInit(){
+
   }
 
 }

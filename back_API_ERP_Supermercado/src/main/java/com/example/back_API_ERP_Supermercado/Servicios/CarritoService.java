@@ -17,4 +17,8 @@ public class CarritoService {
     public Carrito obtenerCarritoPorCliente(Integer id){
         return this.carritoRepositorio.obtenerCarritoPorCliente(id);
     }
+
+    public boolean existeCarritoCliente(Integer id){
+        return this.carritoRepositorio.existeCarritoCliente(id);
+    }
 }

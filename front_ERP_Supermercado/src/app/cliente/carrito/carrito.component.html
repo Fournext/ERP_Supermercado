@@ -1,50 +1,76 @@
-<section class="mx-auto max-w-6xl p-6 flex flex-col lg:flex-row gap-6">
-  <!-- Carrito -->
-  <div class="w-full lg:w-2/3 bg-white rounded-2xl shadow-md p-6 relative">
-    <button (click)="volverHome()"
-      class="bg-red-500 absolute right-4 rounded-[5px] px-3 py-1 hover:scale-[1.05] hover:bg-red-600 text-white">Cerrar</button>
-    <button (click)="registrarCarrito()"
-      class="bg-green-500 absolute rounded-[5px] px-3 py-1 hover:scale-[1.05] hover:bg-green-600 text-white  right-22">Guardar</button>
-    <h3 class="text-center text-3xl font-bold text-gray-800 mb-6">Carrito</h3>
+<div class="mx-auto max-w-6xl p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
 
-    <!-- Aquí iría un *ngFor o similar para productos -->
-    @if (detalleCarritoService.listaDetalleCarritoActual().length>0) {
-    @for (detalle of detalleCarritoService.listaDetalleCarritoActual(); track detalle.idProducto) {
-    <tarjeta-carrito [detalle]="detalle" />
-    }
-    }@else{
-    <span class="flex justify-center text-center">CARRITO VACIO, VOLVER A
-      <a class=" ml-1 underline text-blue-500 hover:scale-[1.05]" [routerLink]="['/ecommerce']">HOME</a>
-    </span>
+  <!-- 🛒 Carrito -->
+  <div class="w-full lg:w-2/3 bg-white rounded-2xl shadow-md p-4 sm:p-6 relative">
+
+    <!-- Botones flotantes -->
+    <div class="absolute top-4 right-4 flex gap-2">
+      <button (click)="registrarCarrito()"
+        class="bg-green-500 px-3 py-1 text-sm sm:text-base rounded-[5px] text-white hover:scale-[1.05] hover:bg-green-600">
+        Guardar
+      </button>
+      <button (click)="volverHome()"
+        class="bg-red-500 px-3 py-1 text-sm sm:text-base rounded-[5px] text-white hover:scale-[1.05] hover:bg-red-600">
+        Cerrar
+      </button>
+    </div>
+
+    <!-- Título -->
+    <h3 class="text-center text-2xl sm:text-3xl font-bold text-gray-800 mb-6 mt-10">Carrito</h3>
+
+    <!-- Lista de productos -->
+    @if (detalleCarritoService.listaDetalleCarritoActual().length > 0) {
+      @for (detalle of detalleCarritoService.listaDetalleCarritoActual(); track detalle.idProducto) {
+        <tarjeta-carrito [detalle]="detalle" />
+      }
+    } @else {
+      <span class="flex flex-col items-center text-center text-gray-600">
+        CARRITO VACÍO, VOLVER A
+        <a class="underline text-blue-500 hover:scale-[1.05] mt-1" [routerLink]="['/ecommerce']">HOME</a>
+      </span>
     }
 
   </div>
-  <!-- Resumen y sugerencias -->
+
+  <!-- 📦 Resumen y sugerencias -->
   <div class="w-full lg:w-1/3 flex flex-col gap-6">
-    <!-- Total -->
-    <div class="bg-white p-6 rounded-2xl shadow-md">
+
+    <!-- Resumen -->
+    <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
       <h4 class="text-xl font-semibold text-gray-800 mb-4">Resumen del pedido</h4>
-      <div class="flex justify-between mb-4">
+      <div class="flex justify-between mb-4 text-base">
         <span class="text-gray-700">Total:</span>
-        <span class="text-green-600 font-bold">${{total()}}</span>
+        <span class="text-green-600 font-bold">${{ total() }}</span>
       </div>
-      <button class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Pagar</button>
+      <button (click)="mostrarModal()"
+        class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
+        Pagar
+      </button>
     </div>
 
-    <!-- Recomendación -->
+    <!-- Recomendaciones -->
     <div class="bg-white p-4 rounded-2xl shadow-md">
       <h4 class="text-lg font-semibold text-gray-800 mb-3">También podría gustarte</h4>
-      <div class="flex gap-4">
-        <img class="h-20 w-20 object-cover rounded-md"
-          src="https://res.cloudinary.com/diqqfka6g/image/upload/v1745588152/producto_11.jpg" alt="Recomendado">
-        <div class="flex flex-col gap-1">
-          <span class="font-medium text-gray-700">Producto recomendado</span>
-          <span class="text-sm text-gray-500">Breve descripción</span>
-          <span class="text-green-600 text-sm font-semibold">Precio: $30.00</span>
-          <button
-            class="bg-green-400 text-white text-sm py-1 rounded hover:bg-green-500 mt-1 w-fit px-2">Agregar</button>
+
+      <div class="flex gap-4 overflow-x-auto pb-2">
+        <div class="min-w-[220px] flex gap-4">
+          <img class="h-20 w-20 object-cover rounded-md"
+            src="https://res.cloudinary.com/diqqfka6g/image/upload/v1745588152/producto_11.jpg" alt="Recomendado">
+          <div class="flex flex-col gap-1">
+            <span class="font-medium text-gray-700">Producto recomendado</span>
+            <span class="text-sm text-gray-500">Breve descripción</span>
+            <span class="text-green-600 text-sm font-semibold">Precio: $30.00</span>
+            <button class="bg-green-400 text-white text-sm py-1 rounded hover:bg-green-500 mt-1 w-fit px-2">
+              Agregar
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+
+  <!-- 💳 Modal de pago -->
+  @if (estadoModal()) {
+    <app-pago />
+  }
+</div>

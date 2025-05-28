@@ -33,4 +33,14 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/getCliente/{id}")
+    public ResponseEntity<Cliente> getClienteById(@PathVariable Integer id) {
+        Cliente cliente = clienteService.obtenerClientePorId(id);
+        if (cliente != null) {
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

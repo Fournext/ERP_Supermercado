@@ -17,4 +17,8 @@ public class ClienteService {
     public Cliente obtenerClienteByUser(Integer id){
         return this.clienteRepositorio.obtenerClienteByUsuario(id);
     }
+
+    public Cliente obtenerClientePorId(Integer id) {
+        return clienteRepositorio.findById(id).orElse(null);
+    }
 }

@@ -1,19 +1,19 @@
-<nav class="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+<nav class="bg-white border-b border-gray-200 px-4 py-3 flex  flex-col md:flex-row items-center md:justify-between">
   <!-- Logo -->
-  <div class="flex items-center space-x-4">
+  <div class="flex items-center md:justify-around space-x-9 md:space-x-4">
     <img src="assets/logo.png" alt="Logo" class="h-10 w-auto">
     <span class="font-bold text-xl text-gray-700">Supermercado</span>
   </div>
 
   <!-- Buscador -->
-  <div class="flex-1 mx-8">
+  <div class="flex-1 mx-8 hidden md:block">
     <input type="text" placeholder="Buscar productos..."
       class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-400">
   </div>
 
   <!-- Menú de Navegación -->
-  <div class="flex items-center space-x-6">
-    <button (click)="borrarFiltros()" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">
+  <div class="flex items-center justify-around space-x-6">
+    <button (click)="borrarFiltros()" class="text-gray-700 hover:text-green-600 hover:scale-[1.05] hidden md:block">
       Productos
     </button>
 
@@ -22,19 +22,52 @@
       <button (click)="toggleCategoria()" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">
         Categoría ▼
       </button>
-      <div *ngIf="mostrarCategoria" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+      <div *ngIf="mostrarCategoria" class="absolute right-0 mt-2 w-25 md:w-48 bg-white border rounded shadow-lg">
         <a *ngFor="let categoria of categoriasFiltradas()" (click)="filtarCategoria(categoria.nombre)" class=" block px-4
           py-2 hover:bg-gray-100">{{categoria.nombre}}</a>
       </div>
     </div>
 
-    <a [routerLink]="['/ecommerce/carrito']" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">Carrito</a>
-
-    <a [routerLink]="['/ecommerce/cliente']" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">Cliente</a>
-
-    <a routerLink="/login" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition hover:scale-[1.05]">
-      Cerrar Sesión
+    @if(userService.existeUsuario()){
+    <a [routerLink]="['/ecommerce/carrito']" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]"><svg
+        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+      </svg>
     </a>
+    <select (change)="cuentaAcciones($event)" class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">
+      <option value="">Cuenta</option>
+      <option value="datos">Datos Personales</option>
+      <option value="factura">Facturas</option>
+    </select>
+    }@else{
+    <span class="text-gray-700 hover:text-green-600 hover:scale-[1.05]">? Contactarnos</span>
+    }
+
+    @if(userService.existeUsuario()){
+    <button (click)="cerrarSesion()"
+      class="px-2 py-1 md:px-4 md:py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition hover:scale-[1.05] absolute top-2 right-2 md:relative md:top-0 md:right-0"><svg
+        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
+      </svg>
+    </button>
+    }@else{
+    <select name="" id="" (change)="inicioDeSesionTipo($event)"
+      class="px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition hover:scale-[1.05]">
+      <option class="bg-green-500 hover:scale-[1.03]" value="">
+        Iniciar Sesion
+      </option>
+      <option class="bg-green-500 hover:scale-[1.03]" value="cliente">
+        Cliente
+      </option>
+      <option class="bg-green-500 hover:scale-[1.03]" value="personal">
+        Personal
+      </option>
+    </select>
+    }
+
 
   </div>
 </nav>

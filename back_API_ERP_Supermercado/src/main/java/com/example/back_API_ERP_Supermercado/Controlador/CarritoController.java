@@ -32,4 +32,10 @@ public class CarritoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/verificar")
+    public ResponseEntity<?> existeCarrito(@RequestParam Integer id){
+        boolean bandera=this.carritoService.existeCarritoCliente(id);
+        return ResponseEntity.status(HttpStatus.OK).body(bandera);
+    }
 }

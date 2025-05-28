@@ -2,7 +2,9 @@
     <app-navbar (filtrar)="filtroCategorias($event)" (borrarFiltro)="borrarFiltro()" />
 </header>
 <main class="py-10 bg-gray-100 mt-10">
-  <router-outlet/>
+  @if(existeUsuario()){
+   <router-outlet />
+  }
   <app-card [categoriaFiltro]="id_categoria" [borrarFiltro]="borrar" />
 </main>
 <footer>

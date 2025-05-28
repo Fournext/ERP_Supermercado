@@ -6,6 +6,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { provideNgxStripe } from 'ngx-stripe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
         newestOnTop: true,                    // 👈 Nuevos arriba de viejos
         preventDuplicates: true               // 👈 Evita mensajes duplicados
       })
-    )
+    ),
+    provideNgxStripe('pk_test_51RSOXrQWBMQRJ0V0QIhFxflDri3YnipXCAA1isZewFKhPAhv8XYv8VfDoDTVrVtAfWYv93Tjr7TOcLuhuxDBkyuy00kh4grvEn')
   ]
 };

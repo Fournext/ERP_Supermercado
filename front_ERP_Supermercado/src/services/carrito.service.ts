@@ -43,6 +43,14 @@ export class CarritoService {
     });
   }
 
+  existeCarritoActual(idCliente: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}${this.complementoUrl}/verificar`, {
+      params: {
+        id: idCliente
+      }
+    })
+  }
+
   constructor() { }
 
 }

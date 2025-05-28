@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-100 via-purple-200 to-pink-200 flex items-center justify-center px-4">
+  <div class="bg-white rounded-2xl shadow-xl p-10 w-full max-w-3xl">
+    <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-6">🔐 Registrar Cliente</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Columna 1 -->
+      <div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">👤 Usuario:</label>
+          <input type="text" [value]="username()" (input)="username.set(txtusername.value)" #txtusername
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: juan123" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">📧 Correo electrónico:</label>
+          <input type="email" [value]="email()" (input)="email.set(txtemail.value)" #txtemail
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: correo@ejemplo.com" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">🔒 Contraseña:</label>
+          <input type="password" [value]="password()" (input)="password.set(txtpassword.value)" #txtpassword
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Contraseña segura" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">📝 Nombre:</label>
+          <input type="text" [value]="nombreCliente()" (input)="nombreCliente.set(txtnombreCliente.value)" #txtnombreCliente
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: Juan" />
+        </div>
+      </div>
+
+      <!-- Columna 2 -->
+      <div>
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">📝 Apellido:</label>
+          <input type="text" [value]="apellidoCliente()" (input)="apellidoCliente.set(txtapellidoCliente.value)" #txtapellidoCliente
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: Pérez" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">🆔 Carnet de Identidad:</label>
+          <input type="text" [value]="carnetCliente()" (input)="carnetCliente.set(txtcarnetCliente.value)" #txtcarnetCliente
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: 12345678" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">🏢 NIT:</label>
+          <input type="text" [value]="NitCliente()" (input)="NitCliente.set(txtNitCliente.value)" #txtNitCliente
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: 1234567011" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">🏠 Dirección:</label>
+          <input type="text" [value]="direccionCliente()" (input)="direccionCliente.set(txtdireccionCliente.value)" #txtdireccionCliente
+            class="w-full border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 p-3 rounded-lg"
+            placeholder="Ej: Av. Siempre Viva 123" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de registro -->
+    <button (click)="registrarUsuario()"
+      class="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white w-full py-3 rounded-lg font-semibold shadow-md hover:shadow-lg hover:from-purple-600 hover:to-pink-600 transition duration-300">
+      Registrar
+    </button>
+
+    <!-- Enlaces -->
+    <div class="flex justify-between items-center mt-4 text-sm">
+      <a [routerLink]="['/login-cliente']" class="text-purple-600 hover:underline">Iniciar Sesión</a>
+      <a href="#" class="text-purple-600 hover:underline">¿Olvidaste tu contraseña?</a>
+    </div>
+  </div>
+</div>
