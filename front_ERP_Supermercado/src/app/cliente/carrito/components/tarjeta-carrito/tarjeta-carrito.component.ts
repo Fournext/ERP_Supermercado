@@ -11,7 +11,7 @@ import { DetalleCarritoService } from '../../../../../services/detalle-carrito.s
 })
 export class TarjetaCarritoComponent {
   private carritoService = inject(CarritoService);
-  private detalleCarrito=inject(DetalleCarritoService);
+  private detalleCarrito = inject(DetalleCarritoService);
 
   // Propiedades
   detalle = input<any>();
@@ -25,22 +25,35 @@ export class TarjetaCarritoComponent {
 
   aumentarCantidad() {
     if (this.detalle().cantidad === 0) return;
-
     this.detalle().cantidad++;
-    this.actualizarTotal();
+    this.actualizarItemEnLista();
   }
 
   disminuirCantidad() {
     if (this.detalle().cantidad === 0) return;
-
     this.detalle().cantidad--;
-    this.actualizarTotal();
+    this.actualizarItemEnLista();
   }
 
   descartarProducto() {
     this.detalle().cantidad = 0;
-    this.actualizarTotal();
+    this.actualizarItemEnLista();
     this.descartado.set(true);
+  }
+
+  private actualizarItemEnLista() {
+    const lista = [...this.detalleCarrito.listaDetalleCarritoActual()];
+    const index = lista.findIndex(p => p.idProducto === this.detalle().idProducto);
+    if (index !== -1) {
+      lista[index] = {
+        ...lista[index],
+        cantidad: this.detalle().cantidad,
+        subtotal: this.subtotal()
+      };
+      this.detalleCarrito.listaDetalleCarritoActual.set(lista);
+    }
+
+    this.actualizarTotal();
   }
 
   private actualizarTotal() {

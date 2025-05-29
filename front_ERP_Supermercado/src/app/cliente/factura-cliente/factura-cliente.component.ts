@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BoletaRecepcionService } from '../../../services/boleta-recepcion.service';
 import { BoletaRecepcion } from '../../../interface/boleta_recepcion';
+import { CarritoService } from '../../../services/carrito.service';
 
 @Component({
   selector: 'factura-cliente',
@@ -27,6 +28,7 @@ export class FacturaClienteComponent {
   private metodoPagoService = inject(MetodoPagoService);
   private facturaSercice = inject(FacturaService);
   private DetalleCarritoService = inject(DetalleCarritoService);
+  private carritoService=inject(CarritoService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
@@ -114,7 +116,9 @@ exportarFacturaPDF(factura: Factura, cliente: Cliente, detalles: DetalleCarrito[
   // 💲 Total
   const finalY = (doc as any).lastAutoTable.finalY || 100;
   doc.setFontSize(12);
-  doc.text(`Total: ${factura.total.toFixed(2)} Bs`, 200, finalY + 10, { align: 'right' });
+  doc.text(`Total: ${factura.total.toFixed(2)} $`,40, finalY + 10, { align: 'right' });
+  doc.text(`Descuento: ${this.carritoService.descuento()} $`, 200, finalY + 10, { align: 'right' });
+
 
   // 💾 Guardar
   const nombreArchivo = `factura_${factura.idFactura}_${fechaStr.replace(/\//g, '-')}.pdf`;

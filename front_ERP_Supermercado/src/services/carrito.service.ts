@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { ProductoConPrecio } from '../interface/producto.interface';
@@ -24,6 +24,14 @@ export class CarritoService {
 
   carritoProductos = signal<ProductoConPrecio[]>([]);
   total = signal<number>(0);
+  descuento = computed(() => {
+    if (this.total() >= 100) {
+      let s: number = this.total() * 0.05;
+      return Math.round(s * 100 / 100);
+    } else {
+      return 0;
+    }
+  })
 
   public registrarCarrito(total: number, estado: string, fecha: string, idCliente: number): Observable<any> {
     const body = {

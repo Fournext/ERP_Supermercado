@@ -8,6 +8,7 @@ import { DetalleCarritoService } from '../../../services/detalle-carrito.service
 import { ClienteService } from '../../../services/cliente.service';
 import { PagoComponent } from "../pago/pago.component";
 import { StripeService } from '../../../services/stripe.service';
+import { DetalleCarrito } from '../../../interface/carrito';
 
 @Component({
   selector: 'app-carrito',
@@ -27,6 +28,8 @@ export class CarritoComponent {
 
   private fecha: string = '';
   total = computed(() => this.carritoService.total());
+  descuento=computed(()=>this.carritoService.descuento());
+
   estado: string = 'vigente';
   idCliente = computed(() => this.clienteService.clienteActual().idCliente);
   idCarrito = this.carritoService.carritoActual().idCarrito;
@@ -85,9 +88,9 @@ export class CarritoComponent {
     })
   }
 
-  obtenerTotal() {
+  obtenerTotal(detalle:DetalleCarrito[]) {
     let total: number = 0;
-    this.detalleCarritoService.listaDetalleCarritoActual().map((detalle) => {
+    detalle.map((detalle) => {
       total += detalle.subtotal;
     })
     this.carritoService.total.set(total);
@@ -105,7 +108,8 @@ export class CarritoComponent {
               this.carritoService.total.set(response.total);
               this.detalleCarritoService.obtenerDetalleCarrito(response.idCarrito).subscribe((detalles) => {
                 this.detalleCarritoService.listaDetalleCarritoActual.set(detalles);
-                this.obtenerTotal(); // 👈 aquí ya puedes calcular correctamente
+                console.log(detalles);
+                this.obtenerTotal(detalles); // 👈 aquí ya puedes calcular correctamente
               });
               console.log(response);
             },

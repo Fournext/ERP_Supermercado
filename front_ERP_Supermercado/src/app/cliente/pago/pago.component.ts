@@ -16,6 +16,7 @@ import { FacturaService } from '../../../services/factura.service';
 export class PagoComponent implements OnInit { // 👈 implementa OnInit
   mensaje: string = '';
   total = computed(() => this.carritoService.total());
+  descuento = computed(() => this.carritoService.descuento());
 
   private stripeService = inject(StripeService);
   private carritoService = inject(CarritoService);
@@ -46,7 +47,7 @@ export class PagoComponent implements OnInit { // 👈 implementa OnInit
     this.mensaje = '';
 
     try {
-      const intent = await this.stripeService.crearPaymentIntent(this.total());
+      const intent = await this.stripeService.crearPaymentIntent(this.total() - this.descuento());
       const result = await this.stripeService.confirmarPago(this.stripe, intent.client_secret, this.card);
 
       if (result.error) {
@@ -92,16 +93,11 @@ export class PagoComponent implements OnInit { // 👈 implementa OnInit
     const factura: FacturaE = {
       fecha: this.fechaFormateado(),
       fechaVencimiento: this.fechaFormateadoFutura(),
-      total: this.total(),
+      total: this.total() - this.descuento(),
       idCarrito: this.carritoService.carritoActual().idCarrito,
       idMetodoPago: 1,
       idCliente: this.carritoService.carritoActual().idCliente
     }
     this.facturaService.registrarFactura(factura);
   }
-
-
-
-
-
 }

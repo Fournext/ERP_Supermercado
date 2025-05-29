@@ -20,14 +20,14 @@
 
     <!-- Lista de productos -->
     @if (detalleCarritoService.listaDetalleCarritoActual().length > 0) {
-      @for (detalle of detalleCarritoService.listaDetalleCarritoActual(); track detalle.idProducto) {
-        <tarjeta-carrito [detalle]="detalle" />
-      }
+    @for (detalle of detalleCarritoService.listaDetalleCarritoActual(); track detalle.idProducto) {
+    <tarjeta-carrito [detalle]="detalle" />
+    }
     } @else {
-      <span class="flex flex-col items-center text-center text-gray-600">
-        CARRITO VACÍO, VOLVER A
-        <a class="underline text-blue-500 hover:scale-[1.05] mt-1" [routerLink]="['/ecommerce']">HOME</a>
-      </span>
+    <span class="flex flex-col items-center text-center text-gray-600">
+      CARRITO VACÍO, VOLVER A
+      <a class="underline text-blue-500 hover:scale-[1.05] mt-1" [routerLink]="['/ecommerce']">HOME</a>
+    </span>
     }
 
   </div>
@@ -38,9 +38,15 @@
     <!-- Resumen -->
     <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
       <h4 class="text-xl font-semibold text-gray-800 mb-4">Resumen del pedido</h4>
-      <div class="flex justify-between mb-4 text-base">
-        <span class="text-gray-700">Total:</span>
-        <span class="text-green-600 font-bold">${{ total() }}</span>
+      <div class="flex flex-col justify-between mb-4 text-base">
+        <div class="w-full flex justify-between">
+          <span class="text-gray-700">Total:</span>
+          <span class="text-green-600 font-bold">${{ total() }}</span>
+        </div>
+        <div class="w-full flex justify-between">
+          <span class="text-gray-700">Descuento: </span>
+          <span class="text-red-600 font-bold">${{descuento()}}</span>
+        </div>
       </div>
       <button (click)="mostrarModal()"
         class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
@@ -71,6 +77,6 @@
 
   <!-- 💳 Modal de pago -->
   @if (estadoModal()) {
-    <app-pago />
+  <app-pago />
   }
 </div>
