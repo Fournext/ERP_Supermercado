@@ -1,0 +1,26 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+    <h2 class="text-xl font-semibold mb-4 text-center">Enviar Notificación</h2>
+
+    <label class="block mb-2 text-sm font-medium text-gray-700">Seleccionar encargado</label>
+    <select (change)="obtenerEncargado($event)"
+      class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <option value="">----</option>
+      @for (encargado of listaEncargados(); track encargado) {
+      <option value="{{encargado.idEncargado}}">{{ encargado.nombre }}</option>
+      }
+    </select>
+
+    <div class="flex gap-2">
+      <button (click)="enviarNotificacion()"
+        class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition">
+        Enviar
+      </button>
+
+      <button (click)="cerrarModal()"
+        class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

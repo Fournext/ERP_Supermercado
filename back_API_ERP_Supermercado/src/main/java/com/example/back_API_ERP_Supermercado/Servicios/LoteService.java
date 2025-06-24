@@ -1,6 +1,9 @@
 package com.example.back_API_ERP_Supermercado.Servicios;
 
 
+import com.example.back_API_ERP_Supermercado.Entidad.EncargadoInventario;
+import com.example.back_API_ERP_Supermercado.Entidad.Lote;
+import com.example.back_API_ERP_Supermercado.Repositorio.EncargadoInventarioRepositorio;
 import com.example.back_API_ERP_Supermercado.Repositorio.LoteRepositorio;
 import com.example.back_API_ERP_Supermercado.Servicios.DTO.LoteDTO;
 import com.example.back_API_ERP_Supermercado.Servicios.DTO.LoteGETDTO;
@@ -14,6 +17,10 @@ import java.util.Optional;
 public class LoteService {
     @Autowired
     private LoteRepositorio loteRepository;
+    @Autowired
+    private EncargadoInventarioRepositorio encargadoInventarioRepositorio;
+    @Autowired
+    private NotificacionService notificacionService;
 
     public void insertarLote(LoteDTO dto) {
         loteRepository.insertarLote(
@@ -40,6 +47,23 @@ public class LoteService {
                 dto.getCosto_unitario(),
                 dto.getFecha_caducidad()
         );
+    }
+
+    public void verificarYNotificarBajoStock(Integer id) {
+        List<Lote> lotes = loteRepository.findAll();
+
+        for (Lote lote : lotes) {
+            if (lote.getStock() < lote.getStock_minimo()) {
+                EncargadoInventario encargado = encargadoInventarioRepositorio.findById(id)  // puedes parametrizar esto
+                        .orElseThrow(() -> new RuntimeException("Encargado no encontrado"));
+
+                String asunto = "Alerta de inventario bajo";
+                String cuerpo = "El lote '" + lote.getId_lote() + "' tiene solo "
+                        + lote.getStock() + " unidades.";
+
+                notificacionService.enviarCorreo(encargado.getCorreoNotificacion(), asunto, cuerpo);
+            }
+        }
     }
 
     public List<LoteGETDTO> obtenerLotes() {

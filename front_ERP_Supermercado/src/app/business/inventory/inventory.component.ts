@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, Signal, ChangeDetectorRef, signal } from '@angular/core';
+import { Component, OnInit, computed, Signal, ChangeDetectorRef, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -18,15 +18,21 @@ import autoTable from 'jspdf-autotable';
 import * as ExcelJS from "exceljs";
 import { saveAs } from 'file-saver'
 
+import { AppComponent } from '../../app.component';
+import { Encargado } from '../../../interface/encargado.interface';
+import { EncargadoService } from '../../../services/encargado.service';
+import { ForumlarioRegisterEncargadoComponent } from "./forumlario-register-encargado/forumlario-register-encargado.component";
+import { FormularioAsignacionEncargadoComponent } from "./formulario-asignacion-encargado/formulario-asignacion-encargado.component";
+
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ForumlarioRegisterEncargadoComponent, FormularioAsignacionEncargadoComponent],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css']
 })
 export default class InventoryComponent implements OnInit {
-
+  private encargadoService = inject(EncargadoService)
   constructor(
     private toastr: ToastrService,
     private loteServices: LoteService,
@@ -34,9 +40,22 @@ export default class InventoryComponent implements OnInit {
     private repisaServices: RepisaService,
     private alamcenServices: AlmacenService,
     private _bitacoraservices: BitacoraService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private appComponent: AppComponent
   ) { }
 
+  estadoModalRegisterEncargado = computed(() => this.encargadoService.modalRegister());
+  estadoModalEnviarNotificacion=computed(()=>this.encargadoService.modalEnviar());
+  listaEncargados = signal<Encargado[]>([]);
+
+
+  abrirModal() {
+    this.encargadoService.cambiarEstadoModal();
+  }
+
+  abrirModalEnviar(){
+     this.encargadoService.cambiarEstadoModalEnviar();
+  }
 
   lotes: Lote[] = [];
 
@@ -67,14 +86,13 @@ export default class InventoryComponent implements OnInit {
     this.getAlmacenes();
   }
 
-  getLotes() {
-    this.loteServices.getLotes().subscribe((data) => {
-      this.lotes = data; // ✅ Se mantiene para lógica interna
-      this.lotesFiltrados.set(data); // ✅ Se usa en la tabla reactiva
-    });
-  }
-
-
+getLotes() {
+  this.loteServices.getLotes().subscribe((data) => {
+    this.lotes = data;
+    this.lotesFiltrados.set(data);
+    this.appComponent.alertasStock = data.filter(p => p.stock <= p.stock_minimo);
+  });
+}
 
   getRepisas() {
     this.repisaServices.getRepisas().subscribe((data) => {
@@ -362,9 +380,8 @@ export default class InventoryComponent implements OnInit {
 
     // Guardar el PDF
     doc.save('reporte-inventario.pdf');
-
-
   }
+  
   public generarExcel() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Reporte de Inventario');

@@ -1,2 +1,18 @@
 
 <router-outlet />
+
+<!-- ALERTAS DE STOCK CRÍTICO - POP-UP ESTILO CELULAR -->
+<div *ngIf="debeMostrarAlertas()" class="fixed top-4 right-4 z-50 flex flex-col gap-3 items-end">
+    <div *ngFor="let alerta of alertasStock; let i = index"
+        class="slide-down bg-yellow-100 text-yellow-900 border border-yellow-300 px-6 py-4 rounded-lg shadow max-w-sm w-full flex items-center justify-between">
+
+        <div class="text-sm leading-snug">
+            <strong>Stock bajo:</strong> {{ alerta.descripcion_producto }}<br>
+            Stock actual: <strong>{{ alerta.stock }}</strong> — Stock mínimo: {{ alerta.stock_minimo }}
+        </div>
+
+        <button (click)="cerrarAlerta(i)" class="ml-4 text-yellow-900 hover:text-red-600 text-lg font-bold">
+            ✕
+        </button>
+    </div>
+</div>
