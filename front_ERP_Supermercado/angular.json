@@ -72,7 +72,8 @@
               "buildTarget": "front_ERP_Supermercado:build:production"
             },
             "development": {
-              "buildTarget": "front_ERP_Supermercado:build:development"
+              "buildTarget": "front_ERP_Supermercado:build:development",
+              "allowedHosts": ["servidor.fournext.me"]
             }
           },
           "defaultConfiguration": "development"
